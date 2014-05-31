@@ -55,6 +55,9 @@ public class BoardManager : MonoBehaviour
 					currTile.name = "Finish Tile";
 				}
 
+				currTile.AddComponent<BoxCollider>().isTrigger = true;
+				currTile.GetComponent<BoxCollider>().size = new Vector3(.004f, 3, .004f);
+
 				_tiles.Add(currTile);
 				currTile.transform.parent = tileGrid.transform;
 			}
