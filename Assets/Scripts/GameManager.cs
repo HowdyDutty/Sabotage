@@ -4,16 +4,11 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour 
 {
-
 	private BoardManager boardManagerScript;
 
 	void Start() 
 	{
-		boardManagerScript = GameObject.FindGameObjectWithTag("GameManager").GetComponent<BoardManager>();
+		boardManagerScript = GameObject.Find("GameManager").GetComponent<BoardManager>();
 	}
-	/*
-	void Update() 
-	{
-	
-	}*/
+
 }

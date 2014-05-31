@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-[ExecuteInEditMode]	// TODO: Get rid of this.
+//[ExecuteInEditMode]	// TODO: Get rid of this.
 public class BoardManager : MonoBehaviour 
 {
 	public GameObject tile;
@@ -13,24 +13,29 @@ public class BoardManager : MonoBehaviour
 	private float tileWidth  = 116;	// Weird number that seems to work with the Model.
 	private float tileHeight = 116;
 	private Vector3 initPos;
-	private GameObject _tiles;
+	private GameObject tileGrid;
+	private List<GameObject> _tiles;
 
-	public GameObject tiles
+	public List<GameObject> tiles
 	{
 		get { return _tiles; }
 	}
 
 	void Start() 
 	{
-		initPos = new Vector3(-(tileWidth*gridWidth/2f) + (tileWidth/2), 
+		tile     = (GameObject)Resources.Load("Prefabs/HexGrid");
+		_tiles   = new List<GameObject>();
+		tileGrid = new GameObject("Grid");
+		initPos  = new Vector3(-(tileWidth*gridWidth/2f) + (tileWidth/2), 
 		                      gridHeight/(2f*tileHeight) - (tileHeight/2), 0);
-		_tiles = new GameObject("Grid");
+
 		createBoard();
 	}
 
 	private void createBoard() 
 	{
 		tile.transform.localScale = new Vector3(tileWidth, 1, tileHeight);
+
 		for (int y = 0; y < gridHeight; y++)
 		{	
 			for (int x = 0; x < gridWidth; x++)
@@ -38,7 +43,20 @@ public class BoardManager : MonoBehaviour
 				Vector2 tileNumber = new Vector2(x,y);
 				Vector3 tilePosition = calcWorldCoord(tileNumber);
 				GameObject currTile = (GameObject)Instantiate(tile, tilePosition, Quaternion.Euler(270, 0, 0));
-				currTile.transform.parent = _tiles.transform;
+
+				if (x == 0 && y == 0)
+				{
+					currTile.AddComponent<StartTile>();
+					currTile.name = "Start Tile";
+				}
+				else if(x == gridWidth-1 && y == gridHeight-1)
+				{
+					currTile.AddComponent<FinishTile>();
+					currTile.name = "Finish Tile";
+				}
+
+				_tiles.Add(currTile);
+				currTile.transform.parent = tileGrid.transform;
 			}
 		}
 	}

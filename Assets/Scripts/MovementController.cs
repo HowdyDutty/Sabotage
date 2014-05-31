@@ -2,13 +2,14 @@
 using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour 
+public class MovementController : MonoBehaviour 
 {
 
 	void Start()
 	{
+		 		
 	}
-	
+
 	void Update()
 	{
 	
