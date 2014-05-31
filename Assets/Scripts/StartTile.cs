@@ -1,4 +1,16 @@
 ﻿
+/*
+ * Written By: Roman Larionov
+ * Script: StartTile.cs
+ * 
+ * Attached to Start Tile GameObject. 
+ * 
+ * This script contols the various doings of the 
+ * start tile, including: Instantiating the player, 
+ * detecting that the game has started, and being 
+ * rendered as the "Start Tile".
+ */
+
 using UnityEngine;
 using System.Collections;
 

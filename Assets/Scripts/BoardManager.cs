@@ -1,4 +1,18 @@
 ﻿
+/*
+ * Written By: Roman Larionov
+ * Script: BoardManager.cs
+ * 
+ * Attached to GameManager GameObject. 
+ * 
+ * !! This script is added to the GameManager GameObject through code !!
+ * 
+ * This script controls the Game Board. The various
+ * things that it does are: create the tile grid,
+ * instantiate all of the tiles, add scripts and 
+ * components to the tiles.
+ */
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
