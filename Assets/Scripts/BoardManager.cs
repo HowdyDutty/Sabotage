@@ -28,9 +28,9 @@ public class BoardManager : MonoBehaviour
 	private float tileHeight = 116;
 	private Vector3 initPos;
 	private GameObject tileGrid;
-	private List<GameObject> _tiles;
+	private List<Tile> _tiles;
 
-	public List<GameObject> tiles
+	public List<Tile> tiles
 	{
 		get { return _tiles; }
 	}
@@ -38,7 +38,7 @@ public class BoardManager : MonoBehaviour
 	void Start() 
 	{
 		tile     = (GameObject)Resources.Load("Prefabs/HexGrid");
-		_tiles   = new List<GameObject>();
+		_tiles   = new List<Tile>();
 		tileGrid = new GameObject("Grid");
 		initPos  = new Vector3(-(tileWidth*gridWidth/2f) + (tileWidth/2), 
 		                      gridHeight/(2f*tileHeight) - (tileHeight/2), 0);
@@ -57,6 +57,7 @@ public class BoardManager : MonoBehaviour
 				Vector2 tileNumber = new Vector2(x,y);
 				Vector3 tilePosition = calcWorldCoord(tileNumber);
 				GameObject currTile = (GameObject)Instantiate(tile, tilePosition, Quaternion.Euler(270, 0, 0));
+				Tile currTileObject = new Tile(currTile, tilePosition.x, tilePosition.y);
 
 				if (x == 0 && y == 0)
 				{
@@ -72,7 +73,7 @@ public class BoardManager : MonoBehaviour
 				currTile.AddComponent<BoxCollider>().isTrigger = true;
 				currTile.GetComponent<BoxCollider>().size = new Vector3(.004f, 3, .004f);
 
-				_tiles.Add(currTile);
+				_tiles.Add(currTileObject);
 				currTile.transform.parent = tileGrid.transform;
 			}
 		}

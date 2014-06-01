@@ -4,42 +4,20 @@ using System.Collections;
 
 public class MovementController : MonoBehaviour 
 {
-	//private bool connected;
+	private GameObject player;
 
 	void Start()
 	{
-		//connected = false;
+		player = this.gameObject;
 	}
 
 	void Update()
 	{
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		float hitDistance;
+
 
 	}
-
-
-	/*
-	void Awake()
-	{
-		//StartCoroutine(CheckForControllers());
-	}
-	// Checks for controller support every second.
-	private IEnumerator CheckForControllers()
-	{
-		string[] controllers = Input.GetJoystickNames();
-		
-		if (!connected && controllers.Length > 0)
-		{
-			this.connected = true;
-			Debug.Log("Connected");
-		}
-		
-		else if (connected && controllers.Length == 0)
-		{
-			this.connected = false;
-			Debug.Log("Disconnected");
-		}
-		
-		yield return new WaitForSeconds(1f);
-	}
-	*/
+	
 } // MovementController
