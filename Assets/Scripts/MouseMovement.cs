@@ -7,14 +7,19 @@ public class MouseMovement : MonoBehaviour
 {
 	private GameObject gameManager;
 	private BoardManager boardManagerScript;
-	private IList<Tile> tiles;
+	private IList<Tile> tileList;
 	private Tile _hitTile;
+
+	public Tile hitTile
+	{
+		get { return _hitTile; }
+	}
 
 	void Start()
 	{
 		gameManager = GameObject.FindGameObjectWithTag("GameManager");
 		boardManagerScript = gameManager.GetComponent<BoardManager>();
-		tiles = boardManagerScript.tiles;
+		tileList = boardManagerScript.tiles;
 	}
 
 	void Update() 
@@ -23,18 +28,18 @@ public class MouseMovement : MonoBehaviour
 		{
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			Debug.DrawRay(ray.origin, ray.direction, Color.red);
-			
 			RaycastHit hit;
 
-			// If the ray hits something when the left mouse button is down.
+			// If the ray hits something.
 			if (Physics.Raycast(ray, out hit, Mathf.Infinity))
 			{
 				GameObject hitObject = hit.collider.gameObject;
+
 				// If the GameObject hit is a Tile.
 				if (hitObject.name.Equals("Tile"))
 				{
 					// Loop through the list of tile until the GameObject matches... not elegant, but it works.
-					foreach (Tile t in tiles)
+					foreach (Tile t in tileList)
 					{
 						if (t.tile == hitObject)
 						{

@@ -17,7 +17,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-//[ExecuteInEditMode]	// TODO: Get rid of this.
 public class BoardManager : MonoBehaviour 
 {
 	public GameObject tile;
@@ -88,7 +87,7 @@ public class BoardManager : MonoBehaviour
 			offset = tileWidth / 2;																	
 		}
 
-		// These are random constants that seem to work the way I want them too. Don't judge.
+		// These use some random constants that seem to make this work the way I want it too. Don't judge.
 		float x = (initPos.x + offset + (gridPos.x * tileWidth)) / 112;										
 		float y = (initPos.y - (gridPos.y * tileHeight * 0.87f)) / 112;										
 
