@@ -31,7 +31,7 @@ public class StartTile : MonoBehaviour
 
 		GameObject playerGameObject = instantiatedPlayer.gameObject;	// So it only loads once.
 		playerGameObject.AddComponent<Player>();
-		playerGameObject.AddComponent<MovementController>();
+		playerGameObject.AddComponent<MouseMovement>();
 		playerGameObject.GetComponent<BoxCollider>().isTrigger = true;
 		playerGameObject.AddComponent<Rigidbody>().useGravity = false;
 	}

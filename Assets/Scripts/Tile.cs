@@ -18,10 +18,13 @@ public class Tile
 		get { return _tile;}
 	}
 
+	// Constructor
 	public Tile(GameObject tile, float x, float y)
 	{
 		_tile = tile;
 		xPos = x;
 		yPos = y;
 	}
+
+	//public override boo
 }

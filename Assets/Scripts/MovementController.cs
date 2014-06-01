@@ -13,9 +13,7 @@ public class MovementController : MonoBehaviour
 
 	void Update()
 	{
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-		float hitDistance;
 
 
 	}

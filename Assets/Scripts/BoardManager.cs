@@ -70,6 +70,7 @@ public class BoardManager : MonoBehaviour
 					currTile.name = "Finish Tile";
 				}
 
+				currTile.name = "Tile";
 				currTile.AddComponent<BoxCollider>().isTrigger = true;
 				currTile.GetComponent<BoxCollider>().size = new Vector3(.004f, 3, .004f);
 
