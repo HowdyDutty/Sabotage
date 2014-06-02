@@ -1,10 +1,9 @@
 Sabotage
 ========
 
-This is the home of the game Sabotage! 
+This is the home of my game, Sabotage! 
 
-This is a work in progress and will be changing drastically over time.
-
+This is a work in progress and will change drastically over time.
 
 Issues
 ========
