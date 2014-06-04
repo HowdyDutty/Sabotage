@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
+		this.renderer.material.color = Color.black;
 		myTransform = this.transform;
 		myTransform.rotation = Quaternion.Euler(0, 0, -63);
 		mouseMovementScript = this.GetComponent<MouseMovement>();
@@ -37,15 +38,14 @@ public class Player : MonoBehaviour
 
 	IEnumerator move(Vector3 tileLocation)
 	{
-		while (Vector3.Distance(myTransform.position, tileLocation) >= 0)
+		while (Vector3.Distance(myTransform.position, tileLocation) >= 0.01f)
 		{
-			myTransform.position = Vector3.Lerp(myTransform.position, tileLocation, Time.deltaTime );
+			myTransform.position = Vector3.Lerp(myTransform.position, tileLocation, Time.deltaTime * movementSpeed);
+			Debug.Log("Its still going!");
 			yield return null;
 		}
 
-		Debug.Log("At the target");
 		yield return new WaitForSeconds(5);
-		Debug.Log("Coroutine has finished");
 	}
 }
 

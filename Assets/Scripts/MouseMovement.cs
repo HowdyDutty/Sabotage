@@ -32,7 +32,7 @@ public class MouseMovement : MonoBehaviour
 
 	void Update() 
 	{
-		if (Input.GetMouseButtonDown(0))
+		if (Input.GetMouseButtonDown(1))
 		{
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			Debug.DrawRay(ray.origin, ray.direction, Color.red);
