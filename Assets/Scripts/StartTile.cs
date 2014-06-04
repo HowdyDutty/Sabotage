@@ -23,7 +23,7 @@ public class StartTile : MonoBehaviour
 		this.renderer.material.color = Color.blue;
 
 		player = (GameObject)Resources.Load("Prefabs/Player");
-		Vector3 playerSpawnLocation = this.transform.position + new Vector3(0, 0, -1);
+		Vector3 playerSpawnLocation = this.transform.position + new Vector3(0, 0, -0.5f);
 
 		GameObject instantiatedPlayer = (GameObject)Instantiate(player, playerSpawnLocation, this.transform.rotation);
 

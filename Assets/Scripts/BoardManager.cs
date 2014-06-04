@@ -70,8 +70,8 @@ public class BoardManager : MonoBehaviour
 				}
 
 				currTile.name = "Tile";
-				currTile.AddComponent<BoxCollider>().isTrigger = true;
-				currTile.GetComponent<BoxCollider>().size = new Vector3(.004f, 3, .004f);
+				currTile.AddComponent<SphereCollider>().isTrigger = true;
+				currTile.GetComponent<SphereCollider>().radius = 0.00432f;
 
 				_tiles.Add(currTileObject);
 				currTile.transform.parent = tileGrid.transform;

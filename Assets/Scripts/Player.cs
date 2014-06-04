@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 
 			Vector3 tileLocation = mouseMovementScript.hitTile.position;
 			Vector3 moveDirection = (tileLocation - myTransform.position).normalized;
-			moveDirection.z = 2;	// Keep on same z-plane.
+			moveDirection.z = 2.5f;	// Keep on same z-plane.
 
 			StartCoroutine(move(tileLocation));
 		}
