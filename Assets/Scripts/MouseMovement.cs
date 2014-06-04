@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,22 +9,21 @@ public class MouseMovement : MonoBehaviour
 	private BoardManager boardManagerScript;
 	private IList<Tile> tileList;
 	private Tile _hitTile;
-	private bool _moveToTile;
+	private bool _tileFound = false;
 
 	public Tile hitTile
 	{
 		get { return _hitTile; }
 	}
 
-	public bool moveToTile
+	public bool tileFound
 	{
-		get { return _moveToTile; }
-		set { _moveToTile = value; }
+		get { return _tileFound; }
+		set { _tileFound = value; }
 	}
 
 	void Start()
 	{
-		_moveToTile = false;
 		gameManager = GameObject.FindGameObjectWithTag("GameManager");
 		boardManagerScript = gameManager.GetComponent<BoardManager>();
 		tileList = boardManagerScript.tiles;
@@ -52,7 +51,7 @@ public class MouseMovement : MonoBehaviour
 						if (t.tile == hitObject)
 						{
 							_hitTile = t;
-							_moveToTile = true;
+							_tileFound = true;
 						}
 					}
 					Debug.Log("It hit a Tile!!");
@@ -60,12 +59,6 @@ public class MouseMovement : MonoBehaviour
 			}
 		}
 	} // Update
-
-	void OnMouseDown() 
-	{
-
-	}
-
 } // MouseMovement
 
 

@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
 	
 	void Update()
 	{
-		if (mouseMovementScript.moveToTile && !atTile)
+		if (mouseMovementScript.tileFound && !atTile)
 		{
 			atTile = true;
 
@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
 		}
 
 		atTile = false;
-		mouseMovementScript.moveToTile = false;
+		mouseMovementScript.tileFound = false;
 	}
 }
 
