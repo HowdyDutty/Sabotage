@@ -9,14 +9,22 @@ public class MouseMovement : MonoBehaviour
 	private BoardManager boardManagerScript;
 	private IList<Tile> tileList;
 	private Tile _hitTile;
+	private bool _moveToTile;
 
 	public Tile hitTile
 	{
 		get { return _hitTile; }
 	}
 
+	public bool moveToTile
+	{
+		get { return _moveToTile; }
+		set { _moveToTile = value; }
+	}
+
 	void Start()
 	{
+		_moveToTile = false;
 		gameManager = GameObject.FindGameObjectWithTag("GameManager");
 		boardManagerScript = gameManager.GetComponent<BoardManager>();
 		tileList = boardManagerScript.tiles;
@@ -44,6 +52,7 @@ public class MouseMovement : MonoBehaviour
 						if (t.tile == hitObject)
 						{
 							_hitTile = t;
+							_moveToTile = true;
 						}
 					}
 					Debug.Log("It hit a Tile!!");

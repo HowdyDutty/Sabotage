@@ -8,9 +8,9 @@ public class Tile
 	private float xPos;
 	private float yPos;
 
-	public Vector2 position
+	public Vector3 position
 	{
-		get { return new Vector2(xPos, yPos); }
+		get { return new Vector3(xPos, yPos, 3); }
 	}
 
 	public GameObject tile 
