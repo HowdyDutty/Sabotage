@@ -4,11 +4,11 @@ using System.Collections;
 
 public class Player : MonoBehaviour 
 {
-	public float movementSpeed = 2f;
+	public float movementSpeed = 7f;
 
 	private MouseMovement mouseMovementScript;
 	private Transform myTransform;
-	private bool currMoving = false;
+	private bool atTile = false;
 
 	void Start()
 	{
@@ -20,32 +20,28 @@ public class Player : MonoBehaviour
 	
 	void Update()
 	{
-		if (mouseMovementScript.moveToTile && !currMoving)
+		if (mouseMovementScript.moveToTile && !atTile)
 		{
-			currMoving = true;
-			Vector3 tileLocation = mouseMovementScript.hitTile.position;
-			Debug.Log(tileLocation.x + "   " + tileLocation.y);
+			atTile = true;
 
+			Vector3 tileLocation = mouseMovementScript.hitTile.position;
 			Vector3 moveDirection = (tileLocation - myTransform.position).normalized;
 			moveDirection.z = 2;	// Keep on same z-plane.
 
 			StartCoroutine(move(tileLocation));
-
-			currMoving = false;
-			mouseMovementScript.moveToTile = false;
 		}
 	}
 
 	IEnumerator move(Vector3 tileLocation)
 	{
-		while (Vector3.Distance(myTransform.position, tileLocation) >= 0.01f)
+		while (Vector3.Distance(myTransform.position, tileLocation) >= 0.06f)
 		{
 			myTransform.position = Vector3.Lerp(myTransform.position, tileLocation, Time.deltaTime * movementSpeed);
-			Debug.Log("Its still going!");
 			yield return null;
 		}
 
-		yield return new WaitForSeconds(5);
+		atTile = false;
+		mouseMovementScript.moveToTile = false;
 	}
 }
 

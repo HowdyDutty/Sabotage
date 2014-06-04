@@ -60,6 +60,12 @@ public class MouseMovement : MonoBehaviour
 			}
 		}
 	} // Update
+
+	void OnMouseDown() 
+	{
+
+	}
+
 } // MouseMovement
 
 
