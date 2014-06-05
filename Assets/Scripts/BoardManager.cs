@@ -43,58 +43,96 @@ public class BoardManager : MonoBehaviour
 		                      gridHeight/(2f*tileHeight) - (tileHeight/2), 0);
 
 		createBoard();
+		createConnections();
 	}
 
 	private void createBoard() 
 	{
 		tile.transform.localScale = new Vector3(tileWidth, 1, tileHeight);
+		int tileCounter = 0;
 
 		for (int y = 0; y < gridHeight; y++)
 		{	
 			for (int x = 0; x < gridWidth; x++)
 			{
-				Vector2 tileNumber = new Vector2(x,y);
-				Vector3 tilePosition = calcWorldCoord(tileNumber);
-				GameObject currTile = (GameObject)Instantiate(tile, tilePosition, Quaternion.Euler(270, 0, 0));
-				Tile currTileObject = new Tile(currTile, tilePosition.x, tilePosition.y);
+				tileCounter++;
+				Vector3 tilePosition = calcWorldCoord(x,y);
 
-				if (x == 0 && y == 0)
+				GameObject currGameObject = (GameObject)Instantiate(tile, tilePosition, Quaternion.Euler(270, 0, 0));
+				Tile currTile = new Tile(currGameObject, tilePosition.x, tilePosition.y, tileCounter);
+
+				currGameObject.name = "Tile";
+				currGameObject.AddComponent<SphereCollider>().isTrigger = true;
+				currGameObject.GetComponent<SphereCollider>().radius = 0.00432f;
+
+				_tiles.Add(currTile);
+				currGameObject.transform.parent = tileGrid.transform;	// Becomes a child of tileGrid.
+
+				if (tileCounter == 1)
 				{
-					currTile.AddComponent<StartTile>();
-					currTile.name = "Start Tile";
+					currGameObject.AddComponent<StartTile>();
+					currGameObject.name = "Start Tile";
 				}
-				else if(x == gridWidth-1 && y == gridHeight-1)
+				else if(tileCounter == (gridWidth * gridHeight))
 				{
-					currTile.AddComponent<FinishTile>();
-					currTile.name = "Finish Tile";
+					currGameObject.AddComponent<FinishTile>();
+					currGameObject.name = "Finish Tile";
 				}
-
-				currTile.name = "Tile";
-				currTile.AddComponent<SphereCollider>().isTrigger = true;
-				currTile.GetComponent<SphereCollider>().radius = 0.00432f;
-
-				_tiles.Add(currTileObject);
-				currTile.transform.parent = tileGrid.transform;
 			}
 		}
 	}
 																								
-	private Vector3 calcWorldCoord(Vector2 gridPos)											
+	private Vector3 calcWorldCoord(int gridPosX, int gridPosY)											
 	{																							
 		float offset = 0;		
-		if (gridPos.y % 2 != 0)		
+		if (gridPosY % 2 != 0)		
 		{
 			offset = tileWidth / 2;																	
 		}
 
 		// These use some random constants that seem to make this work the way I want it too. Don't judge.
-		float x = (initPos.x + offset + (gridPos.x * tileWidth)) / 112;										
-		float y = (initPos.y - (gridPos.y * tileHeight * 0.87f)) / 112;										
+		float x = (initPos.x + offset + (gridPosX * tileWidth)) / 112;										
+		float y = (initPos.y - (gridPosY * tileHeight * 0.87f)) / 112;										
 
 		return new Vector3(x, y, 3);																
 	}	
-																									
+
+	private void createConnections()
+	{
+		foreach (Tile t in _tiles)
+		{
+			foreach (Tile s in _tiles)
+			{
+				if (t.hasMaxConnections())
+				{
+					break;
+				}
+				// Don't be your own connection.
+				if (s.tile.Equals(t.tile))
+				{
+					continue;
+				}
+				if (isConnected(t, s))
+				{
+					t.addConnection(s);
+				}
+			}
+		}
+	}
+
+	private bool isConnected(Tile start, Tile end) 
+	{
+		return (Vector3.Distance(end.position, start.position) <= 1.4f);
+	}
+
+																						
 } // BoardManager
+
+
+
+
+
+
 
 
 
