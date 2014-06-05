@@ -5,12 +5,13 @@
  * 
  * Attached to GameManager GameObject. 
  * 
- * !! This script is added to the GameManager GameObject through code !!
+ * !! This script is added to the GameManager GameObject through code in the GameManager Script!!
  * 
  * This script controls the Game Board. The various
  * things that it does are: create the tile grid,
  * instantiate all of the tiles, add scripts and 
- * components to the tiles.
+ * components to the tiles, and saves all connected
+ * tiles in the tile objects.
  */
 
 using UnityEngine;
@@ -19,7 +20,7 @@ using System.Collections.Generic;
 
 public class BoardManager : MonoBehaviour 
 {
-	public GameObject tile;
+	public GameObject tileGameObject;
 	public int gridWidth     = 10;
 	public int gridHeight    = 10;
 
@@ -36,7 +37,7 @@ public class BoardManager : MonoBehaviour
 
 	void Start() 
 	{
-		tile     = (GameObject)Resources.Load("Prefabs/HexGrid");
+		tileGameObject     = (GameObject)Resources.Load("Prefabs/HexGrid");
 		_tiles   = new List<Tile>();
 		tileGrid = new GameObject("Grid");
 		initPos  = new Vector3(-(tileWidth*gridWidth/2f) + (tileWidth/2), 
@@ -48,7 +49,7 @@ public class BoardManager : MonoBehaviour
 
 	private void createBoard() 
 	{
-		tile.transform.localScale = new Vector3(tileWidth, 1, tileHeight);
+		tileGameObject.transform.localScale = new Vector3(tileWidth, 1, tileHeight);
 		int tileCounter = 0;
 
 		for (int y = 0; y < gridHeight; y++)
@@ -56,10 +57,10 @@ public class BoardManager : MonoBehaviour
 			for (int x = 0; x < gridWidth; x++)
 			{
 				tileCounter++;
-				Vector3 tilePosition = calcWorldCoord(x,y);
+				Vector3 currTilePosition = calcWorldCoord(x,y);
 
-				GameObject currGameObject = (GameObject)Instantiate(tile, tilePosition, Quaternion.Euler(270, 0, 0));
-				Tile currTile = new Tile(currGameObject, tilePosition.x, tilePosition.y, tileCounter);
+				GameObject currGameObject = (GameObject)Instantiate(tileGameObject, currTilePosition, Quaternion.Euler(270, 0, 0));
+				Tile currTile = new Tile(currGameObject, currTilePosition.x, currTilePosition.y, tileCounter);
 
 				currGameObject.name = "Tile";
 				currGameObject.AddComponent<SphereCollider>().isTrigger = true;
@@ -99,22 +100,22 @@ public class BoardManager : MonoBehaviour
 
 	private void createConnections()
 	{
-		foreach (Tile t in _tiles)
+		foreach (Tile currTile in _tiles)
 		{
-			foreach (Tile s in _tiles)
+			foreach (Tile potentialConnection in _tiles)
 			{
-				if (t.hasMaxConnections())
+				if (currTile.hasMaxConnections())
 				{
 					break;
 				}
-				// Don't be your own connection.
-				if (s.tile.Equals(t.tile))
+				// Can't be your own connection.
+				if (potentialConnection.tile == currTile.tile)
 				{
 					continue;
 				}
-				if (isConnected(t, s))
+				if (isConnected(currTile, potentialConnection))
 				{
-					t.addConnection(s);
+					currTile.addConnection(potentialConnection);
 				}
 			}
 		}
@@ -122,10 +123,9 @@ public class BoardManager : MonoBehaviour
 
 	private bool isConnected(Tile start, Tile end) 
 	{
-		return (Vector3.Distance(end.position, start.position) <= 1.4f);
+		// 1.37 is the distance between the centers of two Tiles.
+		return (Vector3.Distance(end.position, start.position) <= 1.4f);	
 	}
-
-																						
 } // BoardManager
 
 

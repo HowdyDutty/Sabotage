@@ -5,10 +5,12 @@
  * 
  * Attached to Start Tile GameObject. 
  * 
- * This script contols the various doings of the 
- * start tile, including: Instantiating the player, 
- * detecting that the game has started, and being 
- * rendered as the "Start Tile".
+ * !! This script is added to the Start Tile GameObject through code in the BoardManager Script !!
+ * 
+ * This script contols the Start Tile, including: 
+ * Instantiating the player, detecting that the 
+ * game has started, and being rendered as the 
+ * "Start Tile".
  */
 
 using UnityEngine;

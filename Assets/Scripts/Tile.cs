@@ -12,8 +12,8 @@ public class Tile
 
 	private float xPos;
 	private float yPos;
-	private int _tileNumber;
-	private int maxConnections = 6;
+	private int _tileNumber;		// Number instantiated.
+	private int maxConnections = 6;	// Hexagon only has 6 sides.
 
 	// Public getters.
 	public GameObject tile       	 { get { return tileGameObject;} }
@@ -36,10 +36,14 @@ public class Tile
 	// Methods.
 	public void addConnection(Tile connection)
 	{
-		if (_numConnected <= maxConnections)
+		if (!hasMaxConnections())
 		{
 			_connectedTiles.Add(connection);
 			_numConnected++;
+		}
+		else
+		{
+			Debug.Log("This Tile has already established it's maximum number of connections.");
 		}
 	}
 

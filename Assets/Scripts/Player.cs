@@ -1,4 +1,16 @@
 ﻿
+/*
+ * Written By: Roman Larionov
+ * Script: Player.cs
+ * 
+ * Attached to Player GameObject. 
+ * 
+ * !! This script is added to the Player GameObject through code in the Start Tile Script!!
+ * 
+ * This script controls the Player and all of the attributes about 
+ * it, including: health, movement, location tracking, and more, soon.
+ */
+
 using UnityEngine;
 using System.Collections;
 
