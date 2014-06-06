@@ -22,11 +22,21 @@ public class Player : MonoBehaviour
 	private Transform myTransform;
 	private bool atTile = false;
 
+	enum rotation : int 
+	{
+		RIGHT 		= 270,
+		LEFT  		= 90,
+		LOWER_LEFT  = 240,
+		LOWER_RIGHT = 300,
+		UPPER_LEFT  = 30,
+		UPPER_RIGHT = 330
+	};
+
 	void Start()
 	{
 		this.renderer.material.color = Color.black;
 		myTransform = this.transform;
-		myTransform.rotation = Quaternion.Euler(0, 0, -63);
+		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
 		mouseMovementScript = this.GetComponent<MouseMovement>();
 	}
 	
@@ -40,14 +50,14 @@ public class Player : MonoBehaviour
 			Vector3 moveDirection = (tileLocation - myTransform.position).normalized;
 			moveDirection.z = 2.5f;	// Keep on same z-plane.
 
-			Debug.Log(tileLocation.x + " " + tileLocation.y);
-
 			StartCoroutine(move(tileLocation));
 		}
 	}
 
-	IEnumerator move(Vector3 tileLocation)
+	private IEnumerator move(Vector3 tileLocation)
 	{
+		int playerRotation = findNewOrientation(tileLocation);
+
 		while (Vector3.Distance(myTransform.position, tileLocation) >= 0.06f)
 		{
 			myTransform.position = Vector3.Lerp(myTransform.position, tileLocation, Time.deltaTime * movementSpeed);
@@ -56,6 +66,41 @@ public class Player : MonoBehaviour
 
 		atTile = false;
 		mouseMovementScript.tileFound = false;
+	}
+
+	private int findNewOrientation(Vector3 tileLocation)
+	{
+		if (tileLocation.x > myTransform.position.x)
+		{
+			if (tileLocation.y > myTransform.position.y)
+			{
+				return rotation.UPPER_RIGHT;
+			}
+			else if (tileLocation.y == myTransform.position.y)
+			{
+				return rotation.RIGHT;
+			}
+			else
+			{
+				return rotation.LOWER_RIGHT;
+			}
+		}
+
+		else 	// Not right of player, so it has to be left of it.
+		{
+			if (tileLocation.y > myTransform.position.y)
+			{
+				return rotation.UPPER_LEFT;
+			}
+			else if (tileLocation.y == myTransform.position.y)
+			{
+				return rotation.LEFT;
+			}
+			else
+			{
+				return rotation.LOWER_LEFT;
+			}
+		}
 	}
 }
 
