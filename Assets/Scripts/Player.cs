@@ -17,6 +17,7 @@ using System.Collections;
 public class Player : MonoBehaviour 
 {
 	public float movementSpeed = 7f;
+	public float rotationSpeed = 7f;
 
 	private MouseMovement mouseMovementScript;
 	private Transform myTransform;
@@ -57,6 +58,8 @@ public class Player : MonoBehaviour
 	private IEnumerator move(Vector3 tileLocation)
 	{
 		int playerRotation = findNewOrientation(tileLocation);
+		Debug.Log(playerRotation);
+		//rotatePlayer(playerRotation);
 
 		while (Vector3.Distance(myTransform.position, tileLocation) >= 0.06f)
 		{
@@ -68,37 +71,45 @@ public class Player : MonoBehaviour
 		mouseMovementScript.tileFound = false;
 	}
 
+	private void rotatePlayer(int zRot)
+	{
+		Quaternion newRotation = new Quaternion(myTransform.rotation.x, myTransform.rotation.y, zRot, myTransform.rotation.w);
+		myTransform.rotation = Quaternion.Slerp(myTransform.rotation, newRotation, Time.deltaTime * rotationSpeed);
+	}
+
 	private int findNewOrientation(Vector3 tileLocation)
 	{
-		if (tileLocation.x > myTransform.position.x)
+		Vector3 myPosition = myTransform.position;
+
+		if (tileLocation.x > myPosition.x)
 		{
-			if (tileLocation.y > myTransform.position.y)
+			if (tileLocation.y > myPosition.y)
 			{
-				return rotation.UPPER_RIGHT;
+				return (int)rotation.UPPER_RIGHT;
 			}
-			else if (tileLocation.y == myTransform.position.y)
+			else if (tileLocation.y == myPosition.y)
 			{
-				return rotation.RIGHT;
+				return (int)rotation.RIGHT;
 			}
 			else
 			{
-				return rotation.LOWER_RIGHT;
+				return (int)rotation.LOWER_RIGHT;
 			}
 		}
 
 		else 	// Not right of player, so it has to be left of it.
 		{
-			if (tileLocation.y > myTransform.position.y)
+			if (tileLocation.y > myPosition.y)
 			{
-				return rotation.UPPER_LEFT;
+				return (int)rotation.UPPER_LEFT;
 			}
-			else if (tileLocation.y == myTransform.position.y)
+			else if (tileLocation.y == myPosition.y)
 			{
-				return rotation.LEFT;
+				return (int)rotation.LEFT;
 			}
 			else
 			{
-				return rotation.LOWER_LEFT;
+				return (int)rotation.LOWER_LEFT;
 			}
 		}
 	}
