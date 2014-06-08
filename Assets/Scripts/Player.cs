@@ -13,6 +13,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour 
 {
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour
 	private MouseMovement mouseMovementScript;
 	private Transform myTransform;
 	private bool headingToTile = false;
+	private Tile playerTile;
 
 	enum rotation : int 
 	{
@@ -50,12 +52,23 @@ public class Player : MonoBehaviour
 			Vector3 tileLocation = mouseMovementScript.hitTile.position;
 			int newRotation = newOrientation(tileLocation);
 
-			findShortestPath(myTransform.position, tileLocation);
+			//findShortestPath( , mouseMovementScript.hitTile);
 
 			rotatePlayer(newRotation);
 			StartCoroutine(movePlayer(tileLocation));
 		}
 	}
+
+	// Working on saving the tile that the player is standing on.
+	/*void OnTriggerEnter(Collider other)
+	{
+		if (other.tag.Equals("Tile"))
+		{
+			playerTile = other.gameObject;
+
+			foreach (Tile t in mouseMovementScript.)
+		}
+	}*/
 
 	/*
 		A* pseudocode.
@@ -84,12 +97,73 @@ public class Player : MonoBehaviour
 	*/
 
 	// A* algorithm to find shortest path to desired tile.
-	private Vector3[] findShortestPath(Vector3 start, Vector3 end) 
+	private List<Vector3> findShortestPath(Tile start, Tile goal) 
 	{
-		Vector3[] path = new Vector3[1];
+		List<Vector3> path = new List<Vector3>();
+		int cost = 0;
+		Queue open = new Queue();
+		Stack closed = new Stack();
 
+		open.Enqueue(start);
+		int movementCost = 1;
+
+		while (open.Peek() != goal)
+		{
+			Tile current = (Tile)open.Dequeue();
+			closed.Push(current);
+			ArrayList connections = start.connectedTiles;
+
+			foreach (Tile neighbor in connections)
+			{
+				cost = findCost(current) + movementCost;
+
+				if (open.Contains(neighbor) && (cost < findCost(neighbor)))
+				{
+					while (open.Contains(neighbor))
+					{
+						open.Dequeue();
+					}
+				}
+				if (closed.Contains(neighbor) && (cost < findCost(neighbor)))
+				{
+					while (closed.Contains(neighbor))
+					{
+						closed.Pop();
+					}
+				}
+				if (!open.Contains(neighbor) && !closed.Contains(neighbor))
+				{
+					cost = findCost(neighbor);
+					open.Enqueue(neighbor);
+					neighbor.parent = current;
+				}
+			}
+		}
+		Tile lastTile = (Tile)open.Dequeue();
+		path.Add(lastTile.position);
+
+		while (lastTile.parent != null)
+		{
+			path.Add(lastTile.parent.position);
+			lastTile = lastTile.parent;
+		}
+
+		path.Reverse();
+
+		foreach (Vector3 p in path)
+		{
+			Debug.Log(p);
+		}
 
 		return path;
+	}
+
+	private int findCost(Tile current)
+	{
+		if (current == null)
+			return 1;
+
+		return findCost (current.parent);
 	}
 
 	private IEnumerator movePlayer(Vector3 tileLocation)

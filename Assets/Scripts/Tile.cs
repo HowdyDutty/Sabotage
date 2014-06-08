@@ -7,7 +7,7 @@ public class Tile
 {
 	// Private fields.
 	private GameObject tileGameObject;
-	private List<Tile> _connectedTiles;
+	private ArrayList _connectedTiles;
 	private int _numConnected;
 	private Tile _parent;
 
@@ -22,7 +22,7 @@ public class Tile
 
 	// Public getters.
 	public GameObject tile       	 { get { return tileGameObject;} }
-	public List<Tile> connectedTiles { get { return _connectedTiles; } }
+	public ArrayList connectedTiles { get { return _connectedTiles; } }
 	public int numConnected      	 { get { return _numConnected; } }
 	public Vector3 position 	 	 { get { return new Vector3(xPos, yPos, 2.5f); } }
 	public int tileNumber 		 	 { get { return _tileNumber; } }
@@ -35,7 +35,7 @@ public class Tile
 	// Constructor.
 	public Tile(GameObject tile, float x, float y, int number) 
 	{
-		_connectedTiles = new List<Tile>();
+		_connectedTiles = new ArrayList();
 		tileGameObject = tile;
 		xPos = x;
 		yPos = y;
