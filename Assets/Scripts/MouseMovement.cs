@@ -43,7 +43,7 @@ public class MouseMovement : MonoBehaviour
 				GameObject hitObject = hit.collider.gameObject;
 
 				// If the GameObject hit is a Tile.
-				if (hitObject.name.Equals("Tile"))
+				if (hitObject.tag == "Tile")
 				{
 					// Loop through the list of tile until the GameObject matches... not elegant, but it works.
 					foreach (Tile t in tileList)

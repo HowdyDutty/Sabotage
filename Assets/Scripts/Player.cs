@@ -25,12 +25,12 @@ public class Player : MonoBehaviour
 
 	enum rotation : int 
 	{
-		RIGHT 		= 270,
-		LEFT  		= 90,
+		RIGHT 		= 0,
+		LEFT  		= 180,
 		LOWER_LEFT  = 240,
 		LOWER_RIGHT = 300,
-		UPPER_LEFT  = 30,
-		UPPER_RIGHT = 330
+		UPPER_LEFT  = 120,
+		UPPER_RIGHT = 60
 	};
 
 	void Start()
@@ -51,21 +51,23 @@ public class Player : MonoBehaviour
 			Vector3 moveDirection = (tileLocation - myTransform.position).normalized;
 			moveDirection.z = 2.5f;	// Keep on same z-plane.
 
+			int playerRotation = findNewOrientation(tileLocation);
+			//Debug.Log(playerRotation);
+			Debug.Log(transform.position);
+			//rotatePlayer(playerRotation);
 			StartCoroutine(move(tileLocation));
+			Debug.Log(transform.position);
 		}
 	}
 
 	private IEnumerator move(Vector3 tileLocation)
 	{
-		int playerRotation = findNewOrientation(tileLocation);
-		Debug.Log(playerRotation);
-		//rotatePlayer(playerRotation);
-
 		while (Vector3.Distance(myTransform.position, tileLocation) >= 0.06f)
 		{
 			myTransform.position = Vector3.Lerp(myTransform.position, tileLocation, Time.deltaTime * movementSpeed);
 			yield return null;
 		}
+
 
 		atTile = false;
 		mouseMovementScript.tileFound = false;
@@ -83,13 +85,13 @@ public class Player : MonoBehaviour
 
 		if (tileLocation.x > myPosition.x)
 		{
+			if (tileLocation.y == myPosition.y)
+			{
+				return (int)rotation.RIGHT;
+			}
 			if (tileLocation.y > myPosition.y)
 			{
 				return (int)rotation.UPPER_RIGHT;
-			}
-			else if (tileLocation.y == myPosition.y)
-			{
-				return (int)rotation.RIGHT;
 			}
 			else
 			{
@@ -99,13 +101,13 @@ public class Player : MonoBehaviour
 
 		else 	// Not right of player, so it has to be left of it.
 		{
+			if (tileLocation.y == myPosition.y)
+			{
+				return (int)rotation.LEFT;
+			}
 			if (tileLocation.y > myPosition.y)
 			{
 				return (int)rotation.UPPER_LEFT;
-			}
-			else if (tileLocation.y == myPosition.y)
-			{
-				return (int)rotation.LEFT;
 			}
 			else
 			{

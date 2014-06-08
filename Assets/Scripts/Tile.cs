@@ -19,7 +19,7 @@ public class Tile
 	public GameObject tile       	 { get { return tileGameObject;} }
 	public List<Tile> connectedTiles { get { return _connectedTiles; } }
 	public int numConnected      	 { get { return _numConnected; } }
-	public Vector3 position 	 	 { get { return new Vector3(xPos, yPos, 3); } }
+	public Vector3 position 	 	 { get { return new Vector3(xPos, yPos, 2.5f); } }
 	public int tileNumber 		 	 { get { return _tileNumber; } }
 
 	// Constructor.
