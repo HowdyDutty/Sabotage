@@ -31,6 +31,33 @@ public class MouseMovement : MonoBehaviour
 
 	void Update() 
 	{
+		// Left click
+		if (Input.GetMouseButtonDown(0))
+		{
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			Debug.DrawRay(ray.origin, ray.direction, Color.red);
+			RaycastHit hit;
+			
+			// If the ray hits something.
+			if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+			{
+				GameObject hitObject = hit.collider.gameObject;
+				
+				// If the GameObject hit is a Tile.
+				if (hitObject.tag == "Tile")
+				{
+					foreach (Tile t in tileList)
+					{
+						if (t.tile == hitObject)
+						{
+							t.setBlocked();
+						}
+					}
+				}
+			}
+		}
+
+		// Right click.
 		if (Input.GetMouseButtonDown(1))
 		{
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

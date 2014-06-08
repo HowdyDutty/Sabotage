@@ -63,8 +63,8 @@ public class Player : MonoBehaviour
 		{
 			myTransform.position = Vector3.Lerp(myTransform.position, tileLocation, Time.deltaTime * movementSpeed);
 			yield return null;
-		}
-
+		} 
+		mouseMovementScript.hitTile.hasPlayer = true;
 		atTile = false;
 		mouseMovementScript.tileFound = false;
 	}

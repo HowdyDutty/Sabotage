@@ -75,6 +75,7 @@ public class BoardManager : MonoBehaviour
 				{
 					currGameObject.AddComponent<StartTile>();
 					currGameObject.name = "Start Tile";
+					currTile.hasPlayer = true;
 				}
 				else if(tileCounter == (gridWidth * gridHeight))
 				{
