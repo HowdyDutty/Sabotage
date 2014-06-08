@@ -17,7 +17,7 @@ using System.Collections;
 public class Player : MonoBehaviour 
 {
 	public float movementSpeed = 7f;
-	public float rotationSpeed = 7f;
+	public float rotationSpeed = 10f;
 
 	private MouseMovement mouseMovementScript;
 	private Transform myTransform;
@@ -52,11 +52,8 @@ public class Player : MonoBehaviour
 			moveDirection.z = 2.5f;	// Keep on same z-plane.
 
 			int playerRotation = findNewOrientation(tileLocation);
-			//Debug.Log(playerRotation);
-			Debug.Log(transform.position);
-			//rotatePlayer(playerRotation);
+			rotatePlayer(playerRotation);
 			StartCoroutine(move(tileLocation));
-			Debug.Log(transform.position);
 		}
 	}
 
@@ -68,15 +65,14 @@ public class Player : MonoBehaviour
 			yield return null;
 		}
 
-
 		atTile = false;
 		mouseMovementScript.tileFound = false;
 	}
 
 	private void rotatePlayer(int zRot)
 	{
-		Quaternion newRotation = new Quaternion(myTransform.rotation.x, myTransform.rotation.y, zRot, myTransform.rotation.w);
-		myTransform.rotation = Quaternion.Slerp(myTransform.rotation, newRotation, Time.deltaTime * rotationSpeed);
+		Quaternion newRotation = Quaternion.AngleAxis(zRot, Vector3.forward);
+		myTransform.rotation = Quaternion.Slerp(myTransform.rotation, newRotation, rotationSpeed);
 	}
 
 	private int findNewOrientation(Vector3 tileLocation)
@@ -85,7 +81,7 @@ public class Player : MonoBehaviour
 
 		if (tileLocation.x > myPosition.x)
 		{
-			if (tileLocation.y == myPosition.y)
+			if (Mathf.Abs(tileLocation.y - myPosition.y) <= 0.2f)
 			{
 				return (int)rotation.RIGHT;
 			}
@@ -101,7 +97,7 @@ public class Player : MonoBehaviour
 
 		else 	// Not right of player, so it has to be left of it.
 		{
-			if (tileLocation.y == myPosition.y)
+			if (Mathf.Abs(tileLocation.y - myPosition.y) <= 0.2f)
 			{
 				return (int)rotation.LEFT;
 			}
