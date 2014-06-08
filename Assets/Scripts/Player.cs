@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
 
 	private MouseMovement mouseMovementScript;
 	private Transform myTransform;
-	private bool atTile = false;
+	private bool headingToTile = false;
 
 	enum rotation : int 
 	{
@@ -43,21 +43,19 @@ public class Player : MonoBehaviour
 	
 	void Update()
 	{
-		if (mouseMovementScript.tileFound && !atTile)
+		if (mouseMovementScript.tileFound && !headingToTile)
 		{
-			atTile = true;
+			headingToTile = true;
 
 			Vector3 tileLocation = mouseMovementScript.hitTile.position;
-			Vector3 moveDirection = (tileLocation - myTransform.position).normalized;
-			moveDirection.z = 2.5f;	// Keep on same z-plane.
+			int newRotation = newOrientation(tileLocation);
 
-			int playerRotation = findNewOrientation(tileLocation);
-			rotatePlayer(playerRotation);
-			StartCoroutine(move(tileLocation));
+			rotatePlayer(newRotation);
+			StartCoroutine(movePlayer(tileLocation));
 		}
 	}
 
-	private IEnumerator move(Vector3 tileLocation)
+	private IEnumerator movePlayer(Vector3 tileLocation)
 	{
 		while (Vector3.Distance(myTransform.position, tileLocation) >= 0.06f)
 		{
@@ -65,7 +63,7 @@ public class Player : MonoBehaviour
 			yield return null;
 		} 
 		mouseMovementScript.hitTile.hasPlayer = true;
-		atTile = false;
+		headingToTile = false;
 		mouseMovementScript.tileFound = false;
 	}
 
@@ -75,7 +73,7 @@ public class Player : MonoBehaviour
 		myTransform.rotation = Quaternion.Slerp(myTransform.rotation, newRotation, rotationSpeed);
 	}
 
-	private int findNewOrientation(Vector3 tileLocation)
+	private int newOrientation(Vector3 tileLocation)
 	{
 		Vector3 myPosition = myTransform.position;
 

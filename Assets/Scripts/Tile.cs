@@ -29,7 +29,7 @@ public class Tile
 	public bool isBlocked			 { get { return _isBlocked; } }
 
 	// Constructor.
-	public Tile(GameObject tile, float x, float y, int number)
+	public Tile(GameObject tile, float x, float y, int number) 
 	{
 		_connectedTiles = new List<Tile>();
 		tileGameObject = tile;
