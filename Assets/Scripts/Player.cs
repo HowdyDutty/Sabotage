@@ -50,9 +50,46 @@ public class Player : MonoBehaviour
 			Vector3 tileLocation = mouseMovementScript.hitTile.position;
 			int newRotation = newOrientation(tileLocation);
 
+			findShortestPath(myTransform.position, tileLocation);
+
 			rotatePlayer(newRotation);
 			StartCoroutine(movePlayer(tileLocation));
 		}
+	}
+
+	/*
+		A* pseudocode.
+		--------------
+		
+		OPEN = priority queue containing START
+		CLOSED = empty set
+		while lowest rank in OPEN is not the GOAL:
+		  current = remove lowest rank item from OPEN
+		  add current to CLOSED
+		  for neighbors of current:
+		    cost = g(current) + movementcost(current, neighbor)
+		    if neighbor in OPEN and cost less than g(neighbor):
+		      remove neighbor from OPEN, because new path is better
+		    if neighbor in CLOSED and cost less than g(neighbor): **
+		      remove neighbor from CLOSED
+		    if neighbor not in OPEN and neighbor not in CLOSED:
+		      set g(neighbor) to cost
+		      add neighbor to OPEN
+		      set priority queue rank to g(neighbor) + h(neighbor)
+		      set neighbor's parent to current
+
+		reconstruct reverse path from goal to start
+		by following parent pointers
+
+	*/
+
+	// A* algorithm to find shortest path to desired tile.
+	private Vector3[] findShortestPath(Vector3 start, Vector3 end) 
+	{
+		Vector3[] path = new Vector3[1];
+
+
+		return path;
 	}
 
 	private IEnumerator movePlayer(Vector3 tileLocation)
