@@ -14,6 +14,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Resources;
 
 public class Player : MonoBehaviour 
 {
@@ -93,6 +94,21 @@ public class Player : MonoBehaviour
 
 		reconstruct reverse path from goal to start
 		by following parent pointers
+		
+		------------------------------------------------------------------------------
+
+		closed = {}
+		q = emptyqueue;
+		q.enqueue(0.0, makepath(start))
+		while q is not empty
+		    p = q.dequeueCheapest
+		    if closed contains p.last then continue;
+		    if p.last == destination then return p
+		    closed.add(p.last)
+		    foreach n in p.last.neighbours 
+		        newpath = p.continuepath(n)
+		        q.enqueue(newpath.TotalCost + estimateCost(n, destination), newpath)
+		return null
 
 	*/
 
@@ -101,6 +117,7 @@ public class Player : MonoBehaviour
 	{
 		List<Vector3> path = new List<Vector3>();
 		int cost = 0;
+
 		Queue open = new Queue();
 		Stack closed = new Stack();
 
