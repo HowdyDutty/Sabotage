@@ -21,6 +21,11 @@ public class Player : MonoBehaviour
 	public float movementSpeed = 7f;
 	public float rotationSpeed = 10f;
 
+	private GameObject gameManager;
+	private BoardManager boardManagerScript;
+	private IList<Tile> tileList;
+
+
 	private MouseMovement mouseMovementScript;
 	private Transform myTransform;
 	private bool headingToTile = false;
@@ -38,6 +43,10 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
+		gameManager = GameObject.FindGameObjectWithTag("GameManager");
+		boardManagerScript = gameManager.GetComponent<BoardManager>();
+		tileList = boardManagerScript.tiles;
+
 		this.renderer.material.color = Color.black;
 		myTransform = this.transform;
 		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
@@ -74,29 +83,6 @@ public class Player : MonoBehaviour
 	/*
 		A* pseudocode.
 		--------------
-		
-		OPEN = priority queue containing START
-		CLOSED = empty set
-		while lowest rank in OPEN is not the GOAL:
-		  current = remove lowest rank item from OPEN
-		  add current to CLOSED
-		  for neighbors of current:
-		    cost = g(current) + movementcost(current, neighbor)
-		    if neighbor in OPEN and cost less than g(neighbor):
-		      remove neighbor from OPEN, because new path is better
-		    if neighbor in CLOSED and cost less than g(neighbor): **
-		      remove neighbor from CLOSED
-		    if neighbor not in OPEN and neighbor not in CLOSED:
-		      set g(neighbor) to cost
-		      add neighbor to OPEN
-		      set priority queue rank to g(neighbor) + h(neighbor)
-		      set neighbor's parent to current
-
-		reconstruct reverse path from goal to start
-		by following parent pointers
-		
-		------------------------------------------------------------------------------
-
 		closed = {}
 		q = emptyqueue;
 		q.enqueue(0.0, makepath(start))
@@ -109,80 +95,85 @@ public class Player : MonoBehaviour
 		        newpath = p.continuepath(n)
 		        q.enqueue(newpath.TotalCost + estimateCost(n, destination), newpath)
 		return null
+		--------------------------------------------------------------------------------
+
+		static public Path<Node> FindPath<Node>(
+		    Node start, 
+		    Node destination, 
+		    Func<Node, Node, double> distance, 
+		    Func<Node, double> estimate)
+		    where Node : IHasNeighbours<Node>
+		{
+		    var closed = new HashSet<Node>();
+		    var queue = new PriorityQueue<double, Path<Node>>();
+		    queue.Enqueue(0, new Path<Node>(start));
+		    while (!queue.IsEmpty)
+		    {
+		        var path = queue.Dequeue();
+		        if (closed.Contains(path.LastStep))
+		            continue;
+		        if (path.LastStep.Equals(destination))
+		            return path;
+		        closed.Add(path.LastStep);
+		        foreach(Node n in path.LastStep.Neighbours)
+		        {
+		            double d = distance(path.LastStep, n);
+		            var newPath = path.AddStep(n, d);
+		            queue.Enqueue(newPath.TotalCost + estimate(n), newPath);
+		        }
+		    }
+		    return null;
 
 	*/
 
 	// A* algorithm to find shortest path to desired tile.
-	private List<Vector3> findShortestPath(Tile start, Tile goal) 
+	private Path<Tile> findShortestPath(Tile start, Tile end)
 	{
-		List<Vector3> path = new List<Vector3>();
-		int cost = 0;
+		PriorityQueue<int, Path<Tile>> open = new PriorityQueue<int, Path<Tile>>();
+		HashSet<Tile> closed = new HashSet<Tile>();
+		open.Enqueue(0, new Path<Tile>(start));
 
-		Queue open = new Queue();
-		Stack closed = new Stack();
-
-		open.Enqueue(start);
-		int movementCost = 1;
-
-		while (open.Peek() != goal)
+		while (!open.isEmpty())
 		{
-			Tile current = (Tile)open.Dequeue();
-			closed.Push(current);
-			ArrayList connections = start.connectedTiles;
-
-			foreach (Tile neighbor in connections)
+			var path = open.Dequeue();
+			if (closed.Contains(path.LastStep))
 			{
-				cost = findCost(current) + movementCost;
+				continue;
+			}
+			if (path.LastStep.Equals(end))
+			{
+				return path;
+			}
+			closed.Add(path.LastStep);
+			foreach (Tile t in path.LastStep.connectedTiles)
+			{
+				/*if (t.isBlocked)
+				{
+					closed.Add(t);
+					break;
+				}*/
 
-				if (open.Contains(neighbor) && (cost < findCost(neighbor)))
-				{
-					while (open.Contains(neighbor))
-					{
-						open.Dequeue();
-					}
-				}
-				if (closed.Contains(neighbor) && (cost < findCost(neighbor)))
-				{
-					while (closed.Contains(neighbor))
-					{
-						closed.Pop();
-					}
-				}
-				if (!open.Contains(neighbor) && !closed.Contains(neighbor))
-				{
-					cost = findCost(neighbor);
-					open.Enqueue(neighbor);
-					neighbor.parent = current;
-				}
+				int dist = 1;  //calcDistance(path.LastStep.position, t.position);
+				var newPath = path.AddStep(t, dist);
+				open.Enqueue(newPath.TotalCost, newPath);
 			}
 		}
-		Tile lastTile = (Tile)open.Dequeue();
-		path.Add(lastTile.position);
-
-		while (lastTile.parent != null)
-		{
-			path.Add(lastTile.parent.position);
-			lastTile = lastTile.parent;
-		}
-
-		path.Reverse();
-
-		foreach (Vector3 p in path)
-		{
-			Debug.Log(p);
-		}
-
-		return path;
+		return null;
 	}
 
-	private int findCost(Tile current)
+
+	// Calculating distance between two tiles using Axial Cooridnate systems.
+	private double calcDistance(Vector3 startPos, Vector3 endPos)
 	{
-		if (current == null)
-			return 1;
+		var q1 = startPos.x;
+		var q2 = startPos.y;
+		var r1 = endPos.x;
+		var r2 = endPos.y;
 
-		return findCost (current.parent);
+		return (Mathf.Abs(q1 - q2) + Mathf.Abs(r1 - r2) + Mathf.Abs(q1 + r1 - q2 - r2)) / 2;
 	}
 
+	// Moves Player, one tile per function call.
 	private IEnumerator movePlayer(Vector3 tileLocation)
 	{
 		while (Vector3.Distance(myTransform.position, tileLocation) >= 0.06f)
@@ -195,12 +186,14 @@ public class Player : MonoBehaviour
 		mouseMovementScript.tileFound = false;
 	}
 
+	// Checks rotation of Player every time he moves.
 	private void rotatePlayer(int zRot)
 	{
 		Quaternion newRotation = Quaternion.AngleAxis(zRot, Vector3.forward);
 		myTransform.rotation = Quaternion.Slerp(myTransform.rotation, newRotation, rotationSpeed);
 	}
 
+	// Finds the new way to face before movement.
 	private int newOrientation(Vector3 tileLocation)
 	{
 		Vector3 myPosition = myTransform.position;

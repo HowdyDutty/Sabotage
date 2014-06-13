@@ -9,7 +9,6 @@ public class Tile
 	private GameObject tileGameObject;
 	private ArrayList _connectedTiles;
 	private int _numConnected;
-	private Tile _parent;
 
 	private float xPos;
 	private float yPos;
@@ -29,8 +28,6 @@ public class Tile
 	public bool hasPlayer 			 { get { return _hasPlayer; } 
 									   set { _hasPlayer = value; } }
 	public bool isBlocked			 { get { return _isBlocked; } }
-	public Tile parent				 { get { return _parent; }
-									   set { _parent = value; } }
 
 	// Constructor.
 	public Tile(GameObject tile, float x, float y, int number) 
