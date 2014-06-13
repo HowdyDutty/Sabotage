@@ -20,10 +20,10 @@ public class Player : MonoBehaviour
 	public float movementSpeed = 7f;
 	public float rotationSpeed = 10f;
 
+	private MouseMovement mouseMovementScript;
 	private BoardManager boardManagerScript;
 	private IList<Tile> tileList;
 
-	private MouseMovement mouseMovementScript;
 	private Transform myTransform;
 	private bool headingToTile = false;
 	private Tile occupiedTile;
@@ -40,13 +40,13 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
+		mouseMovementScript = this.GetComponent<MouseMovement>();
 		boardManagerScript = FindObjectOfType<BoardManager>();
 		tileList = boardManagerScript.tiles;
 
 		this.renderer.material.color = Color.black;
 		myTransform = this.transform;
 		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
-		mouseMovementScript = this.GetComponent<MouseMovement>();
 	}
 	
 	void Update()
@@ -54,24 +54,20 @@ public class Player : MonoBehaviour
 		if (mouseMovementScript.tileFound && !headingToTile)
 		{
 			headingToTile = true;
-
-			Vector3 tileLocation = mouseMovementScript.hitTile.position;
-			int newRotation = newOrientation(tileLocation);
-
+			int k = 1;
 			Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
-			/*List<Tile> tilePath = shortestPath.getPath();
-
-			foreach (Tile t in tilePath)
+			foreach (Tile t in shortestPath)
 			{
-				Debug.Log(t.position);
-			}*/
-
-			rotatePlayer(newRotation);
-			StartCoroutine(movePlayer(tileLocation));
+				Debug.Log(k++ + "\t" + t.position);
+				t.tile.renderer.material.color = Color.magenta;
+				int newRotation = newOrientation(t.position);
+				rotatePlayer(newRotation);
+				StartCoroutine(movePlayer(t.position));
+			}
 		}
 	}
 
-	// Working on saving the tile that the player is standing on.
+	// Saves the tile that the player is currently occupying.
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.tag.Equals("Tile"))
@@ -165,6 +161,7 @@ public class Player : MonoBehaviour
 				open.Enqueue(newPath.TotalCost, newPath);
 			}
 		}
+		Debug.Log("There is no acceptable path :(");
 		return null;
 	}
 
@@ -188,6 +185,8 @@ public class Player : MonoBehaviour
 			myTransform.position = Vector3.Lerp(myTransform.position, tileLocation, Time.deltaTime * movementSpeed);
 			yield return null;
 		} 
+		yield return new WaitForSeconds(2f);
+
 		mouseMovementScript.hitTile.hasPlayer = true;
 		headingToTile = false;
 		mouseMovementScript.tileFound = false;

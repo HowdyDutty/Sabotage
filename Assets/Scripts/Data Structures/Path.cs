@@ -27,19 +27,21 @@ class Path<T> : IEnumerable<T>
 
 	public IEnumerator<T> GetEnumerator()
 	{
+		List<T> reverseOrder = new List<T>();
 		for (Path<T> p = this; p != null; p = p.PreviousSteps)
-			yield return p.LastStep;
+		{
+			reverseOrder.Add(p.LastStep);
+		}
+		reverseOrder.Reverse();
+
+		foreach (T t in reverseOrder)
+		{
+			yield return t;
+		}
 	}
 
 	IEnumerator IEnumerable.GetEnumerator()
 	{
 		return this.GetEnumerator();
-	}
-
-	public List<T> getPath()
-	{
-		List<T> path = new List<T>();
-		path.Add((T)GetEnumerator());
-		return path;
 	}
 }
