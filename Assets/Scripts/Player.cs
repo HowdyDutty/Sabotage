@@ -5,7 +5,7 @@
  * 
  * Attached to Player GameObject. 
  * 
- * !! This script is added to the Player GameObject through code in the Start Tile Script!!
+ * !! This script is added to the Player GameObject through code in the Start Tile Script !!
  * 
  * This script controls the Player and all of the attributes about 
  * it, including: health, movement, location tracking, and more, soon.
@@ -17,7 +17,8 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour 
 {
-	public float movementSpeed = 7f;
+	public float movementSpeed = 3f;
+	public float tilesPerSecond = 1.5f;
 	public float rotationSpeed = 10f;
 
 	private MouseMovement mouseMovementScript;
@@ -54,16 +55,10 @@ public class Player : MonoBehaviour
 		if (mouseMovementScript.tileFound && !headingToTile)
 		{
 			headingToTile = true;
-			int k = 1;
+			float tick = Time.time + 400000;
+			
 			Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
-			foreach (Tile t in shortestPath)
-			{
-				Debug.Log(k++ + "\t" + t.position);
-				t.tile.renderer.material.color = Color.magenta;
-				int newRotation = newOrientation(t.position);
-				rotatePlayer(newRotation);
-				StartCoroutine(movePlayer(t.position));
-			}
+			StartCoroutine(pathCoroutine(shortestPath));
 		}
 	}
 
@@ -82,52 +77,8 @@ public class Player : MonoBehaviour
 			}
 		}
 	}
-	
-	/*
-		A* pseudocode.
-		--------------
-		closed = {}
-		q = emptyqueue;
-		q.enqueue(0.0, makepath(start))
-		while q is not empty
-		    p = q.dequeueCheapest
-		    if closed contains p.last then continue;
-		    if p.last == destination then return p
-		    closed.add(p.last)
-		    foreach n in p.last.neighbours 
-		        newpath = p.continuepath(n)
-		        q.enqueue(newpath.TotalCost + estimateCost(n, destination), newpath)
-		return null
-		--------------------------------------------------------------------------------
 
-		static public Path<Node> FindPath<Node>(
-		    Node start, 
-		    Node destination, 
-		    Func<Node, Node, double> distance, 
-		    Func<Node, double> estimate)
-		    where Node : IHasNeighbours<Node>
-		{
-		    var closed = new HashSet<Node>();
-		    var queue = new PriorityQueue<double, Path<Node>>();
-		    queue.Enqueue(0, new Path<Node>(start));
-		    while (!queue.IsEmpty)
-		    {
-		        var path = queue.Dequeue();
-		        if (closed.Contains(path.LastStep))
-		            continue;
-		        if (path.LastStep.Equals(destination))
-		            return path;
-		        closed.Add(path.LastStep);
-		        foreach(Node n in path.LastStep.Neighbours)
-		        {
-		            double d = distance(path.LastStep, n);
-		            var newPath = path.AddStep(n, d);
-		            queue.Enqueue(newPath.TotalCost + estimate(n), newPath);
-		        }
-		    }
-		    return null;
-
-	*/
+	//-------------------------------------Movement-----------------------------------------//
 
 	// A* algorithm to find shortest path to desired tile.
 	private Path<Tile> findShortestPath(Tile start, Tile end)
@@ -150,11 +101,11 @@ public class Player : MonoBehaviour
 			closed.Add(path.LastStep);
 			foreach (Tile t in path.LastStep.connectedTiles)
 			{
-				/*if (t.isBlocked)
+				if (t.isBlocked)
 				{
 					closed.Add(t);
-					break;
-				}*/
+					continue;
+				}
 
 				int dist = 1;  //calcDistance(path.LastStep.position, t.position);
 				var newPath = path.AddStep(t, dist);
@@ -177,6 +128,19 @@ public class Player : MonoBehaviour
 		return (Mathf.Abs(q1 - q2) + Mathf.Abs(r1 - r2) + Mathf.Abs(q1 + r1 - q2 - r2)) / 2;
 	}
 
+	private IEnumerator pathCoroutine(Path<Tile> shortestPath)
+	{
+		foreach (Tile t in shortestPath)
+		{
+			t.tile.renderer.material.color = Color.magenta;
+			int newRotation = newOrientation(t.position);
+			rotatePlayer(newRotation);
+			StartCoroutine(movePlayer(t.position));
+
+			yield return new WaitForSeconds(tilesPerSecond);
+		}
+	}
+
 	// Moves Player, one tile per function call.
 	private IEnumerator movePlayer(Vector3 tileLocation)
 	{
@@ -185,7 +149,6 @@ public class Player : MonoBehaviour
 			myTransform.position = Vector3.Lerp(myTransform.position, tileLocation, Time.deltaTime * movementSpeed);
 			yield return null;
 		} 
-		yield return new WaitForSeconds(2f);
 
 		mouseMovementScript.hitTile.hasPlayer = true;
 		headingToTile = false;
