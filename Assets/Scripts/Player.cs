@@ -14,22 +14,19 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Resources;
 
 public class Player : MonoBehaviour 
 {
 	public float movementSpeed = 7f;
 	public float rotationSpeed = 10f;
 
-	private GameObject gameManager;
 	private BoardManager boardManagerScript;
 	private IList<Tile> tileList;
-
 
 	private MouseMovement mouseMovementScript;
 	private Transform myTransform;
 	private bool headingToTile = false;
-	private Tile playerTile;
+	private Tile occupiedTile;
 
 	enum rotation : int 
 	{
@@ -43,8 +40,7 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
-		gameManager = GameObject.FindGameObjectWithTag("GameManager");
-		boardManagerScript = gameManager.GetComponent<BoardManager>();
+		boardManagerScript = FindObjectOfType<BoardManager>();
 		tileList = boardManagerScript.tiles;
 
 		this.renderer.material.color = Color.black;
@@ -62,7 +58,13 @@ public class Player : MonoBehaviour
 			Vector3 tileLocation = mouseMovementScript.hitTile.position;
 			int newRotation = newOrientation(tileLocation);
 
-			//findShortestPath( , mouseMovementScript.hitTile);
+			Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
+			/*List<Tile> tilePath = shortestPath.getPath();
+
+			foreach (Tile t in tilePath)
+			{
+				Debug.Log(t.position);
+			}*/
 
 			rotatePlayer(newRotation);
 			StartCoroutine(movePlayer(tileLocation));
@@ -70,16 +72,21 @@ public class Player : MonoBehaviour
 	}
 
 	// Working on saving the tile that the player is standing on.
-	/*void OnTriggerEnter(Collider other)
+	void OnTriggerEnter(Collider other)
 	{
 		if (other.tag.Equals("Tile"))
 		{
-			playerTile = other.gameObject;
-
-			foreach (Tile t in mouseMovementScript.)
+			GameObject otherGameObject = other.gameObject;
+			foreach (Tile t in tileList)
+			{
+				if (t.tile == otherGameObject)
+				{
+					occupiedTile = t;
+				}
+			}
 		}
-	}*/
-
+	}
+	
 	/*
 		A* pseudocode.
 		--------------

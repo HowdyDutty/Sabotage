@@ -61,7 +61,6 @@ public class BoardManager : MonoBehaviour
 
 				GameObject currGameObject = (GameObject)Instantiate(tileGameObject, currTilePosition, Quaternion.Euler(270, 0, 0));
 				Tile currTile = new Tile(currGameObject, currTilePosition.x, currTilePosition.y, tileCounter);
-				//Debug.Log(currTilePosition);
 
 				currGameObject.name = "Tile";
 				currGameObject.tag = "Tile";

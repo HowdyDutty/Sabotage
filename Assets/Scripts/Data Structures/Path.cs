@@ -35,4 +35,11 @@ class Path<T> : IEnumerable<T>
 	{
 		return this.GetEnumerator();
 	}
+
+	public List<T> getPath()
+	{
+		List<T> path = new List<T>();
+		path.Add((T)GetEnumerator());
+		return path;
+	}
 }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class MouseMovement : MonoBehaviour 
 {
-	private GameObject gameManager;
 	private BoardManager boardManagerScript;
 	private IList<Tile> tileList;
 	private Tile _hitTile;
@@ -24,8 +23,7 @@ public class MouseMovement : MonoBehaviour
 
 	void Start()
 	{
-		gameManager = GameObject.FindGameObjectWithTag("GameManager");
-		boardManagerScript = gameManager.GetComponent<BoardManager>();
+		boardManagerScript = FindObjectOfType<BoardManager>();
 		tileList = boardManagerScript.tiles;
 	}
 
