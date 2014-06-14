@@ -55,10 +55,18 @@ public class Player : MonoBehaviour
 		if (mouseMovementScript.tileFound && !headingToTile)
 		{
 			headingToTile = true;
-			float tick = Time.time + 400000;
 			
 			Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
-			StartCoroutine(pathCoroutine(shortestPath));
+			if (shortestPath == null)
+			{
+				headingToTile = false;
+				mouseMovementScript.tileFound = false;
+				Debug.Log("There is no acceptable path :(");
+			}
+			else
+			{
+				StartCoroutine(pathCoroutine(shortestPath));
+			}
 		}
 	}
 
@@ -112,10 +120,8 @@ public class Player : MonoBehaviour
 				open.Enqueue(newPath.TotalCost, newPath);
 			}
 		}
-		Debug.Log("There is no acceptable path :(");
 		return null;
 	}
-
 
 	// Calculating distance between two tiles using Axial Cooridnate systems.
 	private double calcDistance(Vector3 startPos, Vector3 endPos)
