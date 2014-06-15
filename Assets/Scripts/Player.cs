@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
 	public float movementSpeed = 3f;
 	public float tilesPerSecond = 1.5f;
 	public float rotationSpeed = 10f;
+	public int   movesRemaining;
 
 	private MouseMovement mouseMovementScript;
 	private BoardManager boardManagerScript;
@@ -41,6 +42,8 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
+		movesRemaining = 10;
+
 		mouseMovementScript = this.GetComponent<MouseMovement>();
 		boardManagerScript = FindObjectOfType<BoardManager>();
 		tileList = boardManagerScript.tiles;
@@ -52,12 +55,18 @@ public class Player : MonoBehaviour
 	
 	void Update()
 	{
-		if (mouseMovementScript.tileFound && !headingToTile)
+		if (movesRemaining == 0)
+		{
+			// Switch turns.
+		}
+
+		else if (mouseMovementScript.tileFound && !headingToTile)
 		{
 			headingToTile = true;
-			
 			Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
-			if (shortestPath == null)
+
+			// If the tile found is unreachable or requires too many steps to get to.
+			if ((shortestPath == null) || (shortestPath.getNumTilesInPath() > movesRemaining))
 			{
 				headingToTile = false;
 				mouseMovementScript.tileFound = false;
@@ -138,10 +147,19 @@ public class Player : MonoBehaviour
 	{
 		foreach (Tile t in shortestPath)
 		{
-			t.tile.renderer.material.color = Color.magenta;
-			int newRotation = newOrientation(t.position);
-			rotatePlayer(newRotation);
-			StartCoroutine(movePlayer(t.position));
+			if (movesRemaining >= 0)
+			{
+				t.tile.renderer.material.color = Color.magenta;
+				int newRotation = newOrientation(t.position);
+				rotatePlayer(newRotation);
+				StartCoroutine(movePlayer(t.position));
+				movesRemaining--;
+			}
+			else
+			{
+				Debug.Log("Ran out of tile movements this turn.");
+				break;
+			}
 
 			yield return new WaitForSeconds(tilesPerSecond);
 		}

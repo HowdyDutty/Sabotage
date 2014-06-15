@@ -5,9 +5,10 @@ using System.Collections.Generic;
 
 class Path<T> : IEnumerable<T>
 {
-	public T LastStep { get; private set; }
-	public Path<T> PreviousSteps { get; private set; }
-	public int TotalCost { get; private set; }
+	public T LastStep 				{ get; private set; }
+	public Path<T> PreviousSteps	{ get; private set; }
+	public int TotalCost 			{ get; private set; }
+	private int numTilesInPath;
 
 	// Constructors.
 	private Path(T lastStep, Path<T> previousSteps, int totalCost)
@@ -43,5 +44,14 @@ class Path<T> : IEnumerable<T>
 	IEnumerator IEnumerable.GetEnumerator()
 	{
 		return this.GetEnumerator();
+	}
+
+	public int getNumTilesInPath()
+	{
+		for (Path<T> p = this; p != null; p = p.PreviousSteps)
+		{
+			numTilesInPath++;
+		}
+		return numTilesInPath;
 	}
 }

@@ -73,7 +73,7 @@ public class MouseMovement : MonoBehaviour
 					// Loop through the list of tile until the GameObject matches... not elegant, but it works.
 					foreach (Tile t in tileList)
 					{
-						if (t.tile == hitObject)
+						if ((t.tile == hitObject) && (!t.isBlocked))
 						{
 							_hitTile = t;
 							_tileFound = true;
