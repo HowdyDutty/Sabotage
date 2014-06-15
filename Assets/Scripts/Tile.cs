@@ -68,13 +68,11 @@ public class Tile
 		{
 			isBlocked = true;
 			tile.renderer.material.color = Color.red;
-			Debug.Log("Tile " + tileNumber + " is now blocked.");
 		}
 		else 
 		{
 			isBlocked = false;
 			tile.renderer.material.color = Color.white;
-			Debug.Log("Tile " + tileNumber + " is now unblocked.");
 		}
 	}
 }

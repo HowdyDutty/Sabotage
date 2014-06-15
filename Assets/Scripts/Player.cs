@@ -22,9 +22,11 @@ public class Player : MonoBehaviour
 	public float rotationSpeed  = 10f;
 	public int movesRemaining   = 10;
 	public int inventorySlots 	= 5;
+	public int pointsPerMove;
 
 	private MouseMovement mouseMovementScript;
 	private BoardManager boardManagerScript;
+	private ScoreManager scoreManagerScript;
 	private IList<Tile> tileList;
 
 	private Transform myTransform;
@@ -47,12 +49,14 @@ public class Player : MonoBehaviour
 	{
 		mouseMovementScript = this.GetComponent<MouseMovement>();
 		boardManagerScript = FindObjectOfType<BoardManager>();
+		scoreManagerScript = FindObjectOfType<ScoreManager>();
 		tileList = boardManagerScript.tiles;
 
 		this.renderer.material.color = Color.black;
 		myTransform = this.transform;
 		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
 
+		pointsPerMove = 20;
 		inventory = new ArrayList();
 	}
 	
@@ -73,7 +77,7 @@ public class Player : MonoBehaviour
 			{
 				headingToTile = false;
 				mouseMovementScript.tileFound = false;
-				Debug.Log("There is no acceptable path :(");
+				Debug.Log("The desired destination is either blocked or too far away :(");
 			}
 			else
 			{
@@ -144,6 +148,7 @@ public class Player : MonoBehaviour
 
 	private IEnumerator pathCoroutine(Path<Tile> shortestPath)
 	{
+		int pointsGained = 0;
 		foreach (Tile t in shortestPath)
 		{
 			if (movesRemaining >= 0)
@@ -152,6 +157,7 @@ public class Player : MonoBehaviour
 				int newRotation = newOrientation(t.position);
 				rotatePlayer(newRotation);
 				StartCoroutine(movePlayer(t.position));
+				pointsGained += pointsPerMove;
 				movesRemaining--;
 			}
 			else
@@ -162,6 +168,8 @@ public class Player : MonoBehaviour
 
 			yield return new WaitForSeconds(tilesPerSecond);
 		}
+
+		scoreManagerScript.getUpdatedScore(pointsGained);
 	}
 
 	// Moves Player, one tile per function call.

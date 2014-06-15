@@ -10,7 +10,6 @@ public class MouseMovement : MonoBehaviour
 	private IList<Tile> tileList;
 
 	private GameObject hitObject;
-	private Tile tileHelper;
 	private Tile _hitTile;
 	private bool _tileFound = false;
 
@@ -39,10 +38,11 @@ public class MouseMovement : MonoBehaviour
 			takeAction(
 			() => 
 			{
-				if (tileHelper.tile == hitObject)
+				if (hitObject.tag == "Player")
 				{
-					tileHelper.setBlocked();
+					// Open up inventory screen.
 				}
+
 			});
 		}
 
@@ -52,14 +52,41 @@ public class MouseMovement : MonoBehaviour
 			takeAction(
 			() => 
 			{
-				if ((tileHelper.tile == hitObject) && (!tileHelper.isBlocked))
+				if (hitObject.tag == "Tile")
 				{
-					_hitTile = tileHelper;
-					_tileFound = true;
+					// Loop through the list of tile until the GameObject matches... not elegant, but it works.
+					foreach (Tile t in tileList)
+					{
+						if ((t.tile == hitObject) && (!t.isBlocked))
+						{
+							_hitTile = t;
+							_tileFound = true;
+						}
+					}
 				}
 			});
 		}
-	} // Update
+
+		// Middle click.
+		if (Input.GetMouseButtonDown(2))
+		{
+			takeAction(
+			() => 
+			{
+				if (hitObject.tag == "Tile")
+				{
+					// Loop through the list of tile until the GameObject matches... not elegant, but it works.
+					foreach (Tile t in tileList)
+					{
+						if ((t.tile == hitObject))
+						{
+							t.setBlocked();
+						}
+					}
+				}
+			});
+		}
+	}
 
 	private void takeAction(Action action)
 	{
@@ -73,17 +100,9 @@ public class MouseMovement : MonoBehaviour
 			hitObject = hit.collider.gameObject;
 			
 			// If the GameObject hit is a Tile.
-			if (hitObject.tag == "Tile")
+			if (action != null)
 			{
-				// Loop through the list of tile until the GameObject matches... not elegant, but it works.
-				foreach (Tile t in tileList)
-				{
-					tileHelper = t;
-					if (action != null)
-					{
-						action();
-					}
-				}
+				action();
 			}
 		}
 	}
