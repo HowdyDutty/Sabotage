@@ -88,6 +88,7 @@ public class Player : MonoBehaviour
 		if (other.tag.Equals("Tile"))
 		{
 			GameObject otherGameObject = other.gameObject;
+
 			foreach (Tile t in tileList)
 			{
 				if (t.tile == otherGameObject)

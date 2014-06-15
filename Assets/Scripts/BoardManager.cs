@@ -141,7 +141,7 @@ public class BoardManager : MonoBehaviour
 				break;
 			}
 			else if (Random.Range(1, tiles.Count) == t.tileNumber)
-			{	Debug.Log("its in");
+			{	
 				GameObject currPickUpItem = (GameObject)Instantiate(coin, t.position, t.tile.transform.rotation);
 				currPickUpItem.collider.isTrigger = true;
 				currPickUpItem.transform.localScale = new Vector3(.3f, .3f, .3f);
