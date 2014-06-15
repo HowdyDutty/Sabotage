@@ -29,7 +29,7 @@ class Path<T> : IEnumerable<T>
 	public IEnumerator<T> GetEnumerator()
 	{
 		List<T> reverseOrder = new List<T>();
-		for (Path<T> p = this; p != null; p = p.PreviousSteps)
+		for (Path<T> p = this; p.PreviousSteps != null; p = p.PreviousSteps)
 		{
 			reverseOrder.Add(p.LastStep);
 		}
@@ -48,7 +48,7 @@ class Path<T> : IEnumerable<T>
 
 	public int getNumTilesInPath()
 	{
-		for (Path<T> p = this; p != null; p = p.PreviousSteps)
+		for (Path<T> p = this; p.PreviousSteps != null; p = p.PreviousSteps)
 		{
 			numTilesInPath++;
 		}

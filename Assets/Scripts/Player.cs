@@ -17,10 +17,10 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour 
 {
-	public float movementSpeed = 3f;
+	public float movementSpeed  = 3f;
 	public float tilesPerSecond = 1.5f;
-	public float rotationSpeed = 10f;
-	public int   movesRemaining;
+	public float rotationSpeed  = 10f;
+	public int movesRemaining   = 10;
 
 	private MouseMovement mouseMovementScript;
 	private BoardManager boardManagerScript;
@@ -42,8 +42,6 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
-		movesRemaining = 10;
-
 		mouseMovementScript = this.GetComponent<MouseMovement>();
 		boardManagerScript = FindObjectOfType<BoardManager>();
 		tileList = boardManagerScript.tiles;
@@ -103,6 +101,7 @@ public class Player : MonoBehaviour
 		PriorityQueue<int, Path<Tile>> open = new PriorityQueue<int, Path<Tile>>();
 		HashSet<Tile> closed = new HashSet<Tile>();
 		open.Enqueue(0, new Path<Tile>(start));
+		int dist = 1; 
 
 		while (!open.isEmpty())
 		{
@@ -124,23 +123,11 @@ public class Player : MonoBehaviour
 					continue;
 				}
 
-				int dist = 1;  //calcDistance(path.LastStep.position, t.position);
 				var newPath = path.AddStep(t, dist);
 				open.Enqueue(newPath.TotalCost, newPath);
 			}
 		}
 		return null;
-	}
-
-	// Calculating distance between two tiles using Axial Cooridnate systems.
-	private double calcDistance(Vector3 startPos, Vector3 endPos)
-	{
-		var q1 = startPos.x;
-		var q2 = startPos.y;
-		var r1 = endPos.x;
-		var r2 = endPos.y;
-
-		return (Mathf.Abs(q1 - q2) + Mathf.Abs(r1 - r2) + Mathf.Abs(q1 + r1 - q2 - r2)) / 2;
 	}
 
 	private IEnumerator pathCoroutine(Path<Tile> shortestPath)
