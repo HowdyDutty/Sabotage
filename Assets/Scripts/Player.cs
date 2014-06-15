@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 	public float tilesPerSecond = 1.5f;
 	public float rotationSpeed  = 10f;
 	public int movesRemaining   = 10;
+	public int inventorySlots 	= 5;
 
 	private MouseMovement mouseMovementScript;
 	private BoardManager boardManagerScript;
@@ -29,6 +30,8 @@ public class Player : MonoBehaviour
 	private Transform myTransform;
 	private bool headingToTile = false;
 	private Tile occupiedTile;
+
+	private ArrayList inventory;
 
 	enum rotation : int 
 	{
@@ -49,6 +52,8 @@ public class Player : MonoBehaviour
 		this.renderer.material.color = Color.black;
 		myTransform = this.transform;
 		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
+
+		inventory = new ArrayList();
 	}
 	
 	void Update()
@@ -90,6 +95,12 @@ public class Player : MonoBehaviour
 					occupiedTile = t;
 				}
 			}
+		}
+		else if (other.tag.Equals("PickUp"))
+		{
+			GameObject otherGameObject = other.gameObject;
+			otherGameObject.SetActive(false);
+			inventory.Add(otherGameObject);
 		}
 	}
 
