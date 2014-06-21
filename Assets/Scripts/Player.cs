@@ -24,8 +24,6 @@ public class Player : MonoBehaviour
 	public int inventorySlots = 5;
 	public int pointsPerMove;
 
-	public int currPlayer;
-
 	private MouseMovement mouseMovementScript;
 	private BoardManager boardManagerScript;
 	private PlayerManager playerManagerScript;
@@ -58,7 +56,6 @@ public class Player : MonoBehaviour
 		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
 
 		pointsPerMove = 20;
-		//inventory = new ArrayList();
 	}
 
 	void Update()
@@ -101,15 +98,16 @@ public class Player : MonoBehaviour
 				}
 			}
 		}
-		else if (other.tag.Equals("PickUp"))
+		else if (other.tag.Equals("PickUp") && (playerManagerScript.getInventory().Count < inventorySlots))
 		{
 			GameObject otherGameObject = other.gameObject;
 			otherGameObject.SetActive(false);
-			//inventory.Add(otherGameObject);
+			playerManagerScript.getInventory().Add(otherGameObject);
 		}
 		else if (other.name.Equals("Finish Tile"))
 		{
-			switchPlayers();
+			playerManagerScript.changePlayer();
+			scoreManagerScript.changePlayer();
 		}
 	}
 
@@ -173,7 +171,7 @@ public class Player : MonoBehaviour
 			yield return new WaitForSeconds (tilesPerSecond);
 		}
 
-		scoreManagerScript.getUpdatedScore(pointsGained);
+		scoreManagerScript.updateScore(pointsGained);
 	}
 
 	// Moves Player, one tile per function call.
@@ -232,14 +230,6 @@ public class Player : MonoBehaviour
 				return (int)rotation.LOWER_LEFT;
 			}
 		}
-	}
-
-	//-------------------------------Player Management------------------------------------//
-
-
-	private void switchPlayers()
-	{
-		playerManagerScript.changePlayers();
 	}
 }
 

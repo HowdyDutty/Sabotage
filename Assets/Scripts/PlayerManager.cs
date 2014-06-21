@@ -10,15 +10,12 @@ public class PlayerManager : MonoBehaviour
 	public GameObject playerGameObject;
 
 	public int numPlayers = 2;
-	private int _currPlayer;
 	public Player playerScript;
 
 	private ArrayList playerOneInventory;
 	private ArrayList playerTwoInventory;
-	
 
-	public int currPlayer { get { return _currPlayer; } 
-							set { _currPlayer = value; }}
+	public int currPlayer { get; private set;}
 	
 	enum PLAYER : int 
 	{ 
@@ -28,7 +25,7 @@ public class PlayerManager : MonoBehaviour
 
 	void Start()
 	{
-		_currPlayer = (int)PLAYER.ONE;	// Player 1 starts off the game.
+		currPlayer = (int)PLAYER.ONE;	// Player 1 starts off the game.
 
 		startTileGameObject = GameObject.Find("Start Tile");
 		startTileScript = startTileGameObject.GetComponent<StartTile>();
@@ -48,24 +45,29 @@ public class PlayerManager : MonoBehaviour
 		playerGameObject.AddComponent<MouseMovement>();
 		playerGameObject.GetComponent<BoxCollider>().isTrigger = true;
 		playerGameObject.AddComponent<Rigidbody>().useGravity = false;
-		
 	}
 
-	void Update()
+	public ArrayList getInventory()
 	{
-
-	}
-
-	public void changePlayers()
-	{
-		if (_currPlayer == (int)PLAYER.ONE)
+		if (currPlayer == (int)PLAYER.ONE)
 		{
-			_currPlayer = (int)PLAYER.TWO;
+			return playerOneInventory;
 		}
-
-		else if (_currPlayer == (int)PLAYER.TWO)
+		else
 		{
-			_currPlayer = (int)PLAYER.ONE;
+			return playerTwoInventory;
+		}
+	}
+
+	public void changePlayer()
+	{
+		if (currPlayer == (int)PLAYER.ONE)
+		{
+			currPlayer = (int)PLAYER.TWO;
+		}
+		else 
+		{
+			currPlayer = (int)PLAYER.ONE;
 		}
 	}
 }
