@@ -49,6 +49,7 @@ public class Player : MonoBehaviour
 		mouseMovementScript = this.GetComponent<MouseMovement>();
 		boardManagerScript = FindObjectOfType<BoardManager>();
 		scoreManagerScript = FindObjectOfType<ScoreManager>();
+		playerManagerScript = FindObjectOfType<PlayerManager>();
 		tileList = boardManagerScript.tiles;
 
 		this.renderer.material.color = Color.black;
@@ -56,6 +57,8 @@ public class Player : MonoBehaviour
 		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
 
 		pointsPerMove = 20;
+
+		playerManagerScript.getInventory();
 	}
 
 	void Update()
@@ -164,11 +167,10 @@ public class Player : MonoBehaviour
 			}
 			else
 			{
-				Debug.Log("Ran out of tile movements this turn.");
 				break;
 			}
 
-			yield return new WaitForSeconds (tilesPerSecond);
+			yield return new WaitForSeconds(tilesPerSecond);
 		}
 
 		scoreManagerScript.updateScore(pointsGained);

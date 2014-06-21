@@ -10,10 +10,9 @@ public class PlayerManager : MonoBehaviour
 	public GameObject playerGameObject;
 
 	public int numPlayers = 2;
-	public Player playerScript;
 
-	private ArrayList playerOneInventory;
-	private ArrayList playerTwoInventory;
+	private ArrayList playerOneInventory = new ArrayList();
+	private ArrayList playerTwoInventory = new ArrayList();
 
 	public int currPlayer { get; private set;}
 	
@@ -31,7 +30,6 @@ public class PlayerManager : MonoBehaviour
 		startTileScript = startTileGameObject.GetComponent<StartTile>();
 
 		playerGameObject = (GameObject)Resources.Load("Prefabs/Player");
-		playerScript = playerGameObject.GetComponent<Player>();
 
 		Vector3 playerSpawnLocation = startTileGameObject.transform.position + new Vector3(0, 0, -0.5f);
 		GameObject instantiatedPlayer = (GameObject)Instantiate(playerGameObject, 
