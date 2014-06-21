@@ -15,34 +15,35 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour 
+public class Player : MonoBehaviour
 {
-	public float movementSpeed  = 3f;
+	public float movementSpeed = 3f;
 	public float tilesPerSecond = 1.5f;
-	public float rotationSpeed  = 10f;
-	public int movesRemaining   = 10;
-	public int inventorySlots 	= 5;
+	public float rotationSpeed = 10f;
+	public int movesRemaining = 100;
+	public int inventorySlots = 5;
 	public int pointsPerMove;
+
+	public int currPlayer;
 
 	private MouseMovement mouseMovementScript;
 	private BoardManager boardManagerScript;
+	private PlayerManager playerManagerScript;
 	private ScoreManager scoreManagerScript;
-	private IList<Tile> tileList;
 
+	private IList<Tile> tileList;
 	private Transform myTransform;
 	private bool headingToTile = false;
 	private Tile occupiedTile;
 
-	private ArrayList inventory;
-
-	enum rotation : int 
+	enum rotation : int
 	{
-		RIGHT 		= 0,
-		LEFT  		= 180,
-		LOWER_LEFT  = 240,
-		LOWER_RIGHT = 300,
-		UPPER_LEFT  = 120,
-		UPPER_RIGHT = 60
+			RIGHT 		= 0,
+			LEFT  		= 180,
+			LOWER_LEFT  = 240,
+			LOWER_RIGHT = 300,
+			UPPER_LEFT  = 120,
+			UPPER_RIGHT = 60
 	};
 
 	void Start()
@@ -57,27 +58,26 @@ public class Player : MonoBehaviour
 		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
 
 		pointsPerMove = 20;
-		inventory = new ArrayList();
+		//inventory = new ArrayList();
 	}
-	
+
 	void Update()
 	{
 		if (movesRemaining == 0)
 		{
 			// Switch turns.
 		}
-
 		else if (mouseMovementScript.tileFound && !headingToTile)
 		{
 			headingToTile = true;
-			Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
+			Path<Tile> shortestPath = findShortestPath (occupiedTile, mouseMovementScript.hitTile);
 
 			// If the tile found is unreachable or requires too many steps to get to.
-			if ((shortestPath == null) || (shortestPath.getNumTilesInPath() > movesRemaining))
+			if ((shortestPath == null) || (shortestPath.getNumTilesInPath () > movesRemaining))
 			{
 				headingToTile = false;
 				mouseMovementScript.tileFound = false;
-				Debug.Log("The desired destination is either blocked or too far away :(");
+				Debug.Log ("The desired destination is either blocked or too far away :(");
 			}
 			else
 			{
@@ -105,7 +105,11 @@ public class Player : MonoBehaviour
 		{
 			GameObject otherGameObject = other.gameObject;
 			otherGameObject.SetActive(false);
-			inventory.Add(otherGameObject);
+			//inventory.Add(otherGameObject);
+		}
+		else if (other.name.Equals("Finish Tile"))
+		{
+			switchPlayers();
 		}
 	}
 
@@ -166,7 +170,7 @@ public class Player : MonoBehaviour
 				break;
 			}
 
-			yield return new WaitForSeconds(tilesPerSecond);
+			yield return new WaitForSeconds (tilesPerSecond);
 		}
 
 		scoreManagerScript.getUpdatedScore(pointsGained);
@@ -213,9 +217,8 @@ public class Player : MonoBehaviour
 				return (int)rotation.LOWER_RIGHT;
 			}
 		}
-
-		else 	// Not right of player, so it has to be left of it.
-		{
+		else
+		{ 	// Not right of player, so it has to be left of it.
 			if (Mathf.Abs(tileLocation.y - myPosition.y) <= 0.2f)
 			{
 				return (int)rotation.LEFT;
@@ -229,6 +232,14 @@ public class Player : MonoBehaviour
 				return (int)rotation.LOWER_LEFT;
 			}
 		}
+	}
+
+	//-------------------------------Player Management------------------------------------//
+
+
+	private void switchPlayers()
+	{
+		playerManagerScript.changePlayers();
 	}
 }
 

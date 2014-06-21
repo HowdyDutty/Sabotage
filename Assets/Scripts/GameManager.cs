@@ -4,12 +4,16 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour 
 {
-	private BoardManager boardManagerScript;
-	private ScoreManager scoreManagerScript;
+	public BoardManager boardManagerScript;
+	public ScoreManager scoreManagerScript;
+	public PlayerManager playerManagerScript;
 
 	void Start() 
 	{
 		this.gameObject.AddComponent<BoardManager>();
 		this.gameObject.AddComponent<ScoreManager>();
+		this.gameObject.AddComponent<PlayerManager>();
 	}
+
+
 }
