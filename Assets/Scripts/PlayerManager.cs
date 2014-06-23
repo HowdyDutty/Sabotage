@@ -22,6 +22,12 @@ public class PlayerManager : MonoBehaviour
 		TWO = 1
 	};
 
+	enum PLAYER_TURN : int
+	{
+		GAMEBOARD = 0,
+		GOD 	  = 1
+	};
+
 	void Start()
 	{
 		currPlayer = (int)PLAYER.ONE;	// Player 1 starts off the game.
@@ -45,6 +51,8 @@ public class PlayerManager : MonoBehaviour
 		playerGameObject.AddComponent<Rigidbody>().useGravity = false;
 	}
 
+	// Get the correct inventory system for whichever player is 
+	// currently on the board.
 	public ArrayList getInventory()
 	{
 		if (currPlayer == (int)PLAYER.ONE)
@@ -57,6 +65,8 @@ public class PlayerManager : MonoBehaviour
 		}
 	}
 
+	// This is when the GameBoard Player either dies or makes it
+	// to the end of the grid and the roles are reversed.
 	public void changePlayer()
 	{
 		if (currPlayer == (int)PLAYER.ONE)
@@ -67,6 +77,12 @@ public class PlayerManager : MonoBehaviour
 		{
 			currPlayer = (int)PLAYER.ONE;
 		}
+	}
+
+	// This is when the 'God' Player gets to use abilities.
+	public void changeTurn()
+	{
+
 	}
 }
 

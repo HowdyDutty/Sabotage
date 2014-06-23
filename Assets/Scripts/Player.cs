@@ -17,11 +17,11 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour
 {
-	public float movementSpeed = 3f;
+	public float movementSpeed  = 3f;
 	public float tilesPerSecond = 1.5f;
-	public float rotationSpeed = 10f;
-	public int movesRemaining = 100;
-	public int inventorySlots = 5;
+	public float rotationSpeed  = 10f;
+	public int movesRemaining   = 100;
+	public int inventorySlots   = 5;
 	public int pointsPerMove;
 
 	private MouseMovement mouseMovementScript;
@@ -47,8 +47,8 @@ public class Player : MonoBehaviour
 	void Start()
 	{
 		mouseMovementScript = this.GetComponent<MouseMovement>();
-		boardManagerScript = FindObjectOfType<BoardManager>();
-		scoreManagerScript = FindObjectOfType<ScoreManager>();
+		boardManagerScript  = FindObjectOfType<BoardManager>();
+		scoreManagerScript  = FindObjectOfType<ScoreManager>();
 		playerManagerScript = FindObjectOfType<PlayerManager>();
 		tileList = boardManagerScript.tiles;
 
@@ -57,27 +57,26 @@ public class Player : MonoBehaviour
 		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
 
 		pointsPerMove = 20;
-
-		playerManagerScript.getInventory();
 	}
 
 	void Update()
 	{
+		// Switch turns because the player has taken too many steps.
 		if (movesRemaining == 0)
 		{
-			// Switch turns.
+			playerManagerScript.changeTurn();
 		}
 		else if (mouseMovementScript.tileFound && !headingToTile)
 		{
 			headingToTile = true;
-			Path<Tile> shortestPath = findShortestPath (occupiedTile, mouseMovementScript.hitTile);
+			Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
 
 			// If the tile found is unreachable or requires too many steps to get to.
-			if ((shortestPath == null) || (shortestPath.getNumTilesInPath () > movesRemaining))
+			if ((shortestPath == null) || (shortestPath.getNumTilesInPath() > movesRemaining))
 			{
 				headingToTile = false;
 				mouseMovementScript.tileFound = false;
-				Debug.Log ("The desired destination is either blocked or too far away :(");
+				Debug.Log("The desired destination is either blocked or too far away :(");
 			}
 			else
 			{
@@ -190,14 +189,14 @@ public class Player : MonoBehaviour
 		mouseMovementScript.tileFound = false;
 	}
 
-	// Checks rotation of Player every time he moves.
+	// Checks rotation of the Player every time he moves.
 	private void rotatePlayer(int zRot)
 	{
 		Quaternion newRotation = Quaternion.AngleAxis(zRot, Vector3.forward);
 		myTransform.rotation = Quaternion.Slerp(myTransform.rotation, newRotation, rotationSpeed);
 	}
 
-	// Finds the new way to face before movement.
+	// Finds the correct way to face before movement.
 	private int newOrientation(Vector3 tileLocation)
 	{
 		Vector3 myPosition = myTransform.position;
