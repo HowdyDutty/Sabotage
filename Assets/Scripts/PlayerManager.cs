@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class PlayerManager : MonoBehaviour 
 {
 	public StartTile startTileScript;
+	public ScoreManager scoreManagerScript;
 	public GameObject startTileGameObject;
 	public GameObject playerGameObject;
 
@@ -31,6 +32,7 @@ public class PlayerManager : MonoBehaviour
 	void Start()
 	{
 		currPlayer = (int)PLAYER.ONE;	// Player 1 starts off the game.
+		scoreManagerScript = FindObjectOfType<ScoreManager>();
 
 		startTileGameObject = GameObject.Find("Start Tile");
 		startTileScript = startTileGameObject.GetComponent<StartTile>();
@@ -69,6 +71,8 @@ public class PlayerManager : MonoBehaviour
 	// to the end of the grid and the roles are reversed.
 	public void changePlayer()
 	{
+		scoreManagerScript.changePlayer();
+
 		if (currPlayer == (int)PLAYER.ONE)
 		{
 			currPlayer = (int)PLAYER.TWO;

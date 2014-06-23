@@ -10,6 +10,7 @@ public class ScoreManager : MonoBehaviour
 
 	void Start()
 	{
+		currPlayer = 0;
 		playerScores = new int[2];
 		playerManagerScript = FindObjectOfType<PlayerManager>();
 	}

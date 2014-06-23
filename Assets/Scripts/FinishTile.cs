@@ -23,7 +23,7 @@ public class FinishTile : MonoBehaviour
 
 	IEnumerator reset(Collider other)
 	{
-		other.gameObject.SetActive(false);
+		//other.gameObject.SetActive(false);
 		yield return new WaitForSeconds(2);
 		other.gameObject.transform.position = startTilePos;
 	}

@@ -18,7 +18,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour
 {
 	public float movementSpeed  = 3f;
-	public float tilesPerSecond = 1.5f;
+	public float retardSpeed = 1.5f;
 	public float rotationSpeed  = 10f;
 	public int movesRemaining   = 100;
 	public int inventorySlots   = 5;
@@ -88,6 +88,10 @@ public class Player : MonoBehaviour
 	// Saves the tile that the player is currently occupying.
 	void OnTriggerEnter(Collider other)
 	{
+		if (other.name.Equals("Finish Tile"))
+		{
+			playerManagerScript.changePlayer();
+		}
 		if (other.tag.Equals("Tile"))
 		{
 			GameObject otherGameObject = other.gameObject;
@@ -100,16 +104,11 @@ public class Player : MonoBehaviour
 				}
 			}
 		}
-		else if (other.tag.Equals("PickUp") && (playerManagerScript.getInventory().Count < inventorySlots))
+		if (other.tag.Equals("PickUp") && (playerManagerScript.getInventory().Count < inventorySlots))
 		{
 			GameObject otherGameObject = other.gameObject;
 			otherGameObject.SetActive(false);
 			playerManagerScript.getInventory().Add(otherGameObject);
-		}
-		else if (other.name.Equals("Finish Tile"))
-		{
-			playerManagerScript.changePlayer();
-			scoreManagerScript.changePlayer();
 		}
 	}
 
@@ -152,7 +151,6 @@ public class Player : MonoBehaviour
 
 	private IEnumerator pathCoroutine(Path<Tile> shortestPath)
 	{
-		int pointsGained = 0;
 		foreach (Tile t in shortestPath)
 		{
 			if (movesRemaining >= 0)
@@ -161,7 +159,6 @@ public class Player : MonoBehaviour
 				int newRotation = newOrientation(t.position);
 				rotatePlayer(newRotation);
 				StartCoroutine(movePlayer(t.position));
-				pointsGained += pointsPerMove;
 				movesRemaining--;
 			}
 			else
@@ -169,15 +166,14 @@ public class Player : MonoBehaviour
 				break;
 			}
 
-			yield return new WaitForSeconds(tilesPerSecond);
+			yield return new WaitForSeconds(retardSpeed);
 		}
-
-		scoreManagerScript.updateScore(pointsGained);
 	}
 
 	// Moves Player, one tile per function call.
 	private IEnumerator movePlayer(Vector3 tileLocation)
 	{
+		scoreManagerScript.updateScore(pointsPerMove);
 		while (Vector3.Distance(myTransform.position, tileLocation) >= 0.06f)
 		{
 			myTransform.position = Vector3.Lerp(myTransform.position, tileLocation, Time.deltaTime * movementSpeed);
