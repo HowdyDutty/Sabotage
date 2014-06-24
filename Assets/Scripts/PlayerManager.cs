@@ -47,7 +47,7 @@ public class PlayerManager : MonoBehaviour
 		instantiatedPlayer.transform.localScale = new Vector3(.5f, .5f, .5f);
 		
 		playerGameObject = instantiatedPlayer.gameObject;
-		playerGameObject.AddComponent<Player>();
+		playerGameObject.AddComponent<GameBoardPlayer>();
 		playerGameObject.AddComponent<MouseMovement>();
 		playerGameObject.GetComponent<BoxCollider>().isTrigger = true;
 		playerGameObject.AddComponent<Rigidbody>().useGravity = false;

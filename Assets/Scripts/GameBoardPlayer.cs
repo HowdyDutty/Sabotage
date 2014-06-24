@@ -1,7 +1,7 @@
 ﻿
 /*
  * Written By: Roman Larionov
- * Script: Player.cs
+ * Script: GameBoardPlayer.cs
  * 
  * Attached to Player GameObject. 
  * 
@@ -15,7 +15,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour
+public class GameBoardPlayer : MonoBehaviour
 {
 	public float movementSpeed  = 3f;
 	public float retardSpeed = 1.5f;
