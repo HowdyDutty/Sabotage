@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
 		PriorityQueue<int, Path<Tile>> open = new PriorityQueue<int, Path<Tile>>();
 		HashSet<Tile> closed = new HashSet<Tile>();
 		open.Enqueue(0, new Path<Tile>(start));
-		int dist = 1; 
+		int cost = 1; 
 
 		while (!open.isEmpty())
 		{
@@ -142,7 +142,7 @@ public class Player : MonoBehaviour
 					continue;
 				}
 
-				var newPath = path.AddStep(t, dist);
+				var newPath = path.AddStep(t, cost);
 				open.Enqueue(newPath.TotalCost, newPath);
 			}
 		}
@@ -153,7 +153,7 @@ public class Player : MonoBehaviour
 	{
 		foreach (Tile t in shortestPath)
 		{
-			if (movesRemaining >= 0)
+			if (movesRemaining > 0)
 			{
 				t.tile.renderer.material.color = Color.magenta;
 				int newRotation = newOrientation(t.position);

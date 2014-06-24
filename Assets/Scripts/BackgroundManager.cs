@@ -15,16 +15,16 @@ public class BackgroundManager : MonoBehaviour
 	private void createBackground()
 	{
 		// Bottom
-		changePiece(new Vector3(0, 0, 10), new Vector3(0, 0, 0));
+		createPiece(new Vector3(0, 0, 10), new Vector3(0, 0, 0));
 		// Left
-		changePiece(new Vector3(-10, 0, 0), new Vector3(0, 270, 0));
+		createPiece(new Vector3(-10, 0, 0), new Vector3(0, 270, 0));
 		// Right
-		changePiece(new Vector3(10, 0, 0), new Vector3(0, 90, 0));
+		createPiece(new Vector3(10, 0, 0), new Vector3(0, 90, 0));
 		// Back
-		changePiece(new Vector3(0, 10, 0), new Vector3(270, 0, 0));
+		createPiece(new Vector3(0, 10, 0), new Vector3(270, 0, 0));
 	}
 
-	private void changePiece(Vector3 position, Vector3 rotation)
+	private void createPiece(Vector3 position, Vector3 rotation)
 	{
 		GameObject instance = (GameObject)Instantiate(quad);
 		instance.renderer.material.color = Color.black;
