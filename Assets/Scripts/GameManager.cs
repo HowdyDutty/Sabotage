@@ -10,5 +10,6 @@ public class GameManager : MonoBehaviour
 		this.gameObject.AddComponent<ScoreManager>();
 		this.gameObject.AddComponent<PlayerManager>();
 		this.gameObject.AddComponent<BackgroundManager>();
+		this.gameObject.AddComponent<HUDManager>();
 	}
 }
