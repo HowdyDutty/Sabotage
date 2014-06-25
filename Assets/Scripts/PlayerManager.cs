@@ -10,20 +10,19 @@ public class PlayerManager : MonoBehaviour
 	public GameObject startTileGameObject;
 	public GameObject playerGameObject;
 
-	public int numPlayers = 2;
-
 	private ArrayList playerOneInventory = new ArrayList();
 	private ArrayList playerTwoInventory = new ArrayList();
 
-	public int currPlayer { get; private set;}
+	public int currGameBoardPlayer { get; private set; }
+	public int activePlayer		   { get; private set; }
 	
-	enum PLAYER : int 
+	enum Player : int 
 	{ 
 		ONE = 0, 
 		TWO = 1
 	};
 
-	enum PLAYER_TURN : int
+	enum PlayerType : int
 	{
 		GAMEBOARD = 0,
 		GOD 	  = 1
@@ -31,15 +30,16 @@ public class PlayerManager : MonoBehaviour
 
 	void Start()
 	{
-		currPlayer = (int)PLAYER.ONE;	// Player 1 starts off the game.
-		scoreManagerScript = FindObjectOfType<ScoreManager>();
+		currGameBoardPlayer = (int)Player.ONE;				// Player One starts off the game.
+		activePlayer 	    = (int)PlayerType.GAMEBOARD;	// The GameBoard Player starts playing first.
+		scoreManagerScript  = FindObjectOfType<ScoreManager>();
 
 		startTileGameObject = GameObject.Find("Start Tile");
-		startTileScript = startTileGameObject.GetComponent<StartTile>();
+		startTileScript     = startTileGameObject.GetComponent<StartTile>();
 
-		playerGameObject = (GameObject)Resources.Load("Prefabs/Player");
+		playerGameObject    = (GameObject)Resources.Load("Prefabs/Player");
 
-		Vector3 playerSpawnLocation = startTileGameObject.transform.position + new Vector3(0, 0, -0.5f);
+		Vector3 playerSpawnLocation   = startTileGameObject.transform.position + new Vector3(0, 0, -0.5f);
 		GameObject instantiatedPlayer = (GameObject)Instantiate(playerGameObject, 
 		                                                        playerSpawnLocation, 
 		                                                        startTileGameObject.transform.rotation);
@@ -57,7 +57,7 @@ public class PlayerManager : MonoBehaviour
 	// currently on the board.
 	public ArrayList getInventory()
 	{
-		if (currPlayer == (int)PLAYER.ONE)
+		if (currGameBoardPlayer == (int)Player.ONE)
 		{
 			return playerOneInventory;
 		}
@@ -71,22 +71,31 @@ public class PlayerManager : MonoBehaviour
 	// to the end of the grid and the roles are reversed.
 	public void changePlayer()
 	{
+		Debug.Log("Players have changed.");
 		scoreManagerScript.changePlayer();
 
-		if (currPlayer == (int)PLAYER.ONE)
+		if (currGameBoardPlayer == (int)Player.ONE)
 		{
-			currPlayer = (int)PLAYER.TWO;
+			currGameBoardPlayer = (int)Player.TWO;
 		}
 		else 
 		{
-			currPlayer = (int)PLAYER.ONE;
+			currGameBoardPlayer = (int)Player.ONE;
 		}
 	}
 
 	// This is when the 'God' Player gets to use abilities.
 	public void changeTurn()
 	{
-
+		Debug.Log("Turns have changed.");
+		if (activePlayer == (int)PlayerType.GAMEBOARD)
+		{
+			activePlayer = (int)PlayerType.GOD;
+		}
+		else
+		{
+			activePlayer = (int)PlayerType.GAMEBOARD;
+		}
 	}
 }
 

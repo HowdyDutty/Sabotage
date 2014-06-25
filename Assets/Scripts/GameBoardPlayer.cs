@@ -20,7 +20,7 @@ public class GameBoardPlayer : MonoBehaviour
 	public float movementSpeed  = 3f;
 	public float retardSpeed = 1.5f;
 	public float rotationSpeed  = 10f;
-	public int movesRemaining   = 100;
+	public int movesRemaining   = 1;
 	public int inventorySlots   = 5;
 	public int pointsPerMove;
 
@@ -61,26 +61,31 @@ public class GameBoardPlayer : MonoBehaviour
 
 	void Update()
 	{
-		// Switch turns because the player has taken too many steps.
-		if (movesRemaining == 0)
+		// If this player is currently on the board and it's their turn.
+		if (playerManagerScript.currGameBoardPlayer == playerManagerScript.activePlayer)	
 		{
-			playerManagerScript.changeTurn();
-		}
-		else if (mouseMovementScript.tileFound && !headingToTile)
-		{
-			headingToTile = true;
-			Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
-
-			// If the tile found is unreachable or requires too many steps to get to.
-			if ((shortestPath == null) || (shortestPath.getNumTilesInPath() > movesRemaining))
+			// Switch turns because the player has taken too many steps.
+			if (movesRemaining == 0)
 			{
-				headingToTile = false;
-				mouseMovementScript.tileFound = false;
-				Debug.Log("The desired destination is either blocked or too far away :(");
+				playerManagerScript.changeTurn();
 			}
-			else
+			// If there has been a hit tile and the player is not currently heading to a tile.
+			else if (mouseMovementScript.tileFound && !headingToTile)
 			{
-				StartCoroutine(pathCoroutine(shortestPath));
+				headingToTile = true;
+				Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
+
+				// If the tile found is unreachable or requires too many steps to get to.
+				if ((shortestPath == null) || (shortestPath.getNumTilesInPath() > movesRemaining))
+				{
+					headingToTile = false;
+					mouseMovementScript.tileFound = false;
+					Debug.Log("The desired destination is either blocked or too far away :(");
+				}
+				else
+				{	// Start the journey.
+					StartCoroutine(pathCoroutine(shortestPath));
+				}
 			}
 		}
 	}
