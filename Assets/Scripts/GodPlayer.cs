@@ -9,9 +9,10 @@ public class GodPlayer : MonoBehaviour
 	{
 	
 	}
-	
-	void Update() 
+
+	void Update()
 	{
-	
+
 	}
+
 }

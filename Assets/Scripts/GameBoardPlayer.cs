@@ -18,11 +18,14 @@ using System.Collections.Generic;
 public class GameBoardPlayer : MonoBehaviour
 {
 	public float movementSpeed  = 3f;
-	public float retardSpeed = 1.5f;
+	public float retardSpeed    = 1.5f;
 	public float rotationSpeed  = 10f;
-	public int movesRemaining   = 30;
+	public int movesPerTurn     = 300;
+	public int movesRemaining   = 300;
 	public int inventorySlots   = 5;
-	public int pointsPerMove;
+	public int pointsPerMove	= 20;
+
+	private int gameboardPlayer = 0;
 
 	private MouseMovement mouseMovementScript;
 	private BoardManager boardManagerScript;
@@ -55,24 +58,21 @@ public class GameBoardPlayer : MonoBehaviour
 		this.renderer.material.color = Color.black;
 		myTransform = this.transform;
 		myTransform.rotation = Quaternion.Euler(0, 0, 300);	// Starting rotation.
-
-		pointsPerMove = 20;
 	}
 
 	void Update()
 	{
-		// Switch turns because the player has taken too many steps.
-		if (movesRemaining == 0)
-		{
-			Debug.Log("turns have changed");
-			playerManagerScript.changeTurn();
-		}
-
 		// If this player is currently on the board and it's their turn.
-		if (playerManagerScript.currGameBoardPlayer == playerManagerScript.activePlayer)	
+		if (playerManagerScript.activePlayer == gameboardPlayer)	
 		{
+			// Switch turns because the player has taken too many steps.
+			if (movesRemaining == 0)
+			{
+				playerManagerScript.changeTurn();
+				movesRemaining = movesPerTurn;
+			}
 			// If there has been a hit tile and the player is not currently heading to a tile.
-			if (mouseMovementScript.tileFound && !headingToTile)
+			else if (mouseMovementScript.tileFound && !headingToTile)
 			{
 				headingToTile = true;
 				Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
@@ -98,6 +98,7 @@ public class GameBoardPlayer : MonoBehaviour
 		if (other.name.Equals("Finish Tile"))
 		{
 			playerManagerScript.changePlayer();
+			scoreManagerScript.updateScore(0);
 		}
 		if (other.tag.Equals("Tile"))
 		{

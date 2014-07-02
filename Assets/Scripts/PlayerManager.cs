@@ -22,7 +22,7 @@ public class PlayerManager : MonoBehaviour
 		TWO = 1
 	};
 
-	enum PlayerType : int
+	public enum PlayerType : int
 	{
 		GAMEBOARD = 0,
 		GOD 	  = 1
