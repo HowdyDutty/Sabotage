@@ -6,7 +6,7 @@ public class ScoreManager : MonoBehaviour
 {
 	private PlayerManager playerManagerScript;
 	private int currPlayer;
-	private int[] playerScores;	// This holds the scores of both players.
+	public int[] playerScores	;// This holds the scores of both players.
 
 	void Start()
 	{
@@ -33,4 +33,8 @@ public class ScoreManager : MonoBehaviour
 		Debug.Log("Player " + currPlayer + " score is " + playerScores[currPlayer]);
 	}
 
+	public int getScore()
+	{
+		return playerScores[currPlayer];
+	}
 }
