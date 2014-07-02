@@ -4,10 +4,13 @@ using System.Collections;
 
 public class HUDManager : MonoBehaviour 
 {
-	private GameObject currentPlayerGameObject;
-	private GameObject playerScoreGameObject;
+	public float distance = 0.27f;
+
 	public GameObject currentPlayer;
 	public GameObject playerScore;
+
+	GameObject instantiatedCurrentPlayer;
+	GameObject instantiatedPlayerScore;
 
 	public ScoreManager scoreManagerScript;
 	public PlayerManager playerManagerScript;
@@ -17,33 +20,30 @@ public class HUDManager : MonoBehaviour
 		scoreManagerScript  = FindObjectOfType<ScoreManager>();
 		playerManagerScript = FindObjectOfType<PlayerManager>();
 
-		currentPlayerGameObject = new GameObject();
-		playerScoreGameObject   = new GameObject();
-		currentPlayerGameObject.AddComponent<GUIText>();
-		playerScoreGameObject.AddComponent<GUIText>();
+		currentPlayer = (GameObject)Resources.Load("Prefabs/HUD/Current Player");
+		playerScore   = (GameObject)Resources.Load("Prefabs/HUD/PlayerScore");
 
-		currentPlayerGameObject.name = "A";
-		playerScoreGameObject.name = "B";
+		instantiatedCurrentPlayer = (GameObject)Instantiate(currentPlayer);
+		instantiatedPlayerScore   = (GameObject)Instantiate(playerScore);
 
-		Vector3 cameraPosition    = Camera.main.transform.localPosition;
-		Quaternion cameraRotation = Camera.main.transform.rotation;
-
-		currentPlayer = (GameObject)Instantiate(currentPlayerGameObject, 
-		                                        cameraPosition + new Vector3(-1f, 1f, 0), 
-		                                        cameraRotation);
-		playerScore   = (GameObject)Instantiate(playerScoreGameObject, 
-		                                        cameraPosition + new Vector3(1f, 1f, 0), 
-		                                        cameraRotation);
-
+		instantiatedCurrentPlayer.GetComponent<GUIText>().color = Color.green;
+		instantiatedPlayerScore.GetComponent<GUIText>().color   = Color.green;
+		
+		instantiatedCurrentPlayer.transform.parent = Camera.main.transform;
+		instantiatedPlayerScore.transform.parent   = Camera.main.transform;
+		
+		instantiatedCurrentPlayer.transform.localPosition += new Vector3(-distance, 1.8f *distance, 0);
+		instantiatedPlayerScore.transform.localPosition   += new Vector3(distance, 1.8f *distance, 0);
+		
 		int updatedPlayer = playerManagerScript.currGameBoardPlayer + 1;
 		int updatedScore  = scoreManagerScript.getScore();
-
+		
 		updateHUD(updatedPlayer, updatedScore);
 	}
 
 	public void updateHUD(int playerText, int scoreText)
 	{
-		currentPlayer.GetComponent<GUIText>().text = "Player: " + playerText;
-		playerScore.GetComponent<GUIText>().text   = "Score: "  + scoreText;
+		instantiatedCurrentPlayer.GetComponent<GUIText>().text = "Player: " + playerText;
+		instantiatedPlayerScore.GetComponent<GUIText>().text   = "Score: "  + scoreText;
 	}
 }

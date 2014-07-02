@@ -20,7 +20,7 @@ public class GameBoardPlayer : MonoBehaviour
 	public float movementSpeed  = 3f;
 	public float retardSpeed = 1.5f;
 	public float rotationSpeed  = 10f;
-	public int movesRemaining   = 1;
+	public int movesRemaining   = 30;
 	public int inventorySlots   = 5;
 	public int pointsPerMove;
 
@@ -61,16 +61,18 @@ public class GameBoardPlayer : MonoBehaviour
 
 	void Update()
 	{
+		// Switch turns because the player has taken too many steps.
+		if (movesRemaining == 0)
+		{
+			Debug.Log("turns have changed");
+			playerManagerScript.changeTurn();
+		}
+
 		// If this player is currently on the board and it's their turn.
 		if (playerManagerScript.currGameBoardPlayer == playerManagerScript.activePlayer)	
 		{
-			// Switch turns because the player has taken too many steps.
-			if (movesRemaining == 0)
-			{
-				playerManagerScript.changeTurn();
-			}
 			// If there has been a hit tile and the player is not currently heading to a tile.
-			else if (mouseMovementScript.tileFound && !headingToTile)
+			if (mouseMovementScript.tileFound && !headingToTile)
 			{
 				headingToTile = true;
 				Path<Tile> shortestPath = findShortestPath(occupiedTile, mouseMovementScript.hitTile);
