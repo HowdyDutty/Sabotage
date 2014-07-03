@@ -9,6 +9,8 @@ public class ScoreManager : MonoBehaviour
 	private int currPlayer;
 	public int[] playerScores	;// This holds the scores of both players.
 
+	public int scoreToWin = 1000;
+
 	void Start()
 	{
 		currPlayer = 0;
@@ -34,10 +36,21 @@ public class ScoreManager : MonoBehaviour
 		playerScores[currPlayer] += update;
 		HUDManagerScript.updateHUD(currPlayer+1, playerScores[currPlayer]);
 		Debug.Log("Player " + currPlayer + " score is " + playerScores[currPlayer]);
+
+		if (playerScores[currPlayer] == scoreToWin)
+		{
+			endGame(playerScores[currPlayer]);
+		}
 	}
 
 	public int getScore()
 	{
 		return playerScores[currPlayer];
+	}
+
+	private void endGame(int player)
+	{
+		// Go to finish screen.
+		Debug.Log("Player " + player + " has won!");
 	}
 }

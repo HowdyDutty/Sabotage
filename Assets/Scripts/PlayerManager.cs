@@ -97,6 +97,11 @@ public class PlayerManager : MonoBehaviour
 			activePlayer = (int)PlayerType.GAMEBOARD;
 		}
 	}
+
+	public void stopPlayers()
+	{
+		// Switch to end game scene.
+	}
 }
 
 

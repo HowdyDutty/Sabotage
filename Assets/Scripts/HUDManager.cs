@@ -1,31 +1,30 @@
-﻿
 using UnityEngine;
 using System.Collections;
 
 public class HUDManager : MonoBehaviour 
 {
 	public float distance = 0.27f;
-
+	
 	public GameObject currentPlayer;
 	public GameObject playerScore;
-
+	
 	GameObject instantiatedCurrentPlayer;
 	GameObject instantiatedPlayerScore;
-
+	
 	public ScoreManager scoreManagerScript;
 	public PlayerManager playerManagerScript;
-
+	
 	void Start() 
 	{
 		scoreManagerScript  = FindObjectOfType<ScoreManager>();
 		playerManagerScript = FindObjectOfType<PlayerManager>();
-
-		currentPlayer = (GameObject)Resources.Load("Prefabs/HUD/Current Player");
+		
+		currentPlayer = (GameObject)Resources.Load("Prefabs/HUD/CurrentPlayer");
 		playerScore   = (GameObject)Resources.Load("Prefabs/HUD/PlayerScore");
-
+		
 		instantiatedCurrentPlayer = (GameObject)Instantiate(currentPlayer);
 		instantiatedPlayerScore   = (GameObject)Instantiate(playerScore);
-
+		
 		instantiatedCurrentPlayer.GetComponent<GUIText>().color = Color.green;
 		instantiatedPlayerScore.GetComponent<GUIText>().color   = Color.green;
 		
@@ -40,7 +39,7 @@ public class HUDManager : MonoBehaviour
 		
 		updateHUD(updatedPlayer, updatedScore);
 	}
-
+	
 	public void updateHUD(int playerText, int scoreText)
 	{
 		instantiatedCurrentPlayer.GetComponent<GUIText>().text = "Player: " + playerText;
