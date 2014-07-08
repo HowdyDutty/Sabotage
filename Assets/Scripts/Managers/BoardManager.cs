@@ -23,32 +23,27 @@ public class BoardManager : MonoBehaviour
 {
 	public int gridWidth     = 10;
 	public int gridHeight    = 10;
-	private float tileWidth  = 116;	// Weird number that seems to work with the Model.
+	private float tileWidth  = 116;	// fit to local scale of TileGrid Parent GameObject.
 	private float tileHeight = 116;
-	public int numPickUps 	 = 30;
 
 	public GameObject tileGameObject;
 	private Vector3 initPos;
 	private GameObject tileGrid;
 	private List<Tile> _tiles;
 	public List<Tile> tiles { get { return _tiles; } }
-	public GameObject coin;
-	public List<PickUpItem> coinList;
 
 	void Start() 
 	{
 		tileGameObject = (GameObject)Resources.Load("Prefabs/HexGrid");
 		tileGameObject.transform.localScale = new Vector3(tileWidth, 1, tileHeight);
-		coin 	 = (GameObject)Resources.Load("Prefabs/Pick Ups/Coin");
+
 		_tiles   = new List<Tile>();
-		coinList = new List<PickUpItem>();
 		tileGrid = new GameObject("Grid");
 		initPos  = new Vector3(-(tileWidth*gridWidth/2f) + (tileWidth/2), 
 		                      gridHeight/(2f*tileHeight) - (tileHeight/2), 0);
 
 		createBoard();
 		createConnections();
-		addPickUps();
 	}
 
 	private void createBoard() 
@@ -129,29 +124,6 @@ public class BoardManager : MonoBehaviour
 	{
 		// 1.37 is the distance between the centers of two Tiles.
 		return (Vector3.Distance(end.position, start.position) <= 1.4f);	
-	}
-
-	private void addPickUps()
-	{
-		int pickUpsLeft = 1;
-		foreach (Tile t in _tiles)
-		{	
-			if (pickUpsLeft >= numPickUps)
-			{
-				break;
-			}
-			else if (Random.Range(1, tiles.Count) == t.tileNumber)
-			{	
-				GameObject currPickUpItem = (GameObject)Instantiate(coin, t.position, t.tile.transform.rotation);
-				currPickUpItem.collider.isTrigger = true;
-				currPickUpItem.transform.localScale = new Vector3(.3f, .3f, .3f);
-				currPickUpItem.renderer.material.color = Color.cyan;
-
-				PickUpItem currItem = new PickUpItem(currPickUpItem, t, pickUpsLeft);
-				coinList.Add(currItem);
-				pickUpsLeft++;
-			}
-		}
 	}
 } // BoardManager
 

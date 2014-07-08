@@ -11,5 +11,6 @@ public class GameManager : MonoBehaviour
 		this.gameObject.AddComponent<PlayerManager>();
 		this.gameObject.AddComponent<BackgroundManager>();
 		this.gameObject.AddComponent<HUDManager>();
+		this.gameObject.AddComponent<PickUpManager>();
 	}
 }
