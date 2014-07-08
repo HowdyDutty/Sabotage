@@ -1,11 +1,13 @@
 ﻿
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PickUpManager : MonoBehaviour 
 {
 	public BoardManager boardManagerScript;
 	private GameObject pickUp;
+	public List<PickUpItem> pickUpList { get; private set; }
 
 	public int numPickUps 	 = 30;
 	
@@ -14,6 +16,7 @@ public class PickUpManager : MonoBehaviour
 	{
 		boardManagerScript = FindObjectOfType<BoardManager>();
 		pickUp = (GameObject)Resources.Load("Prefabs/Pick Ups/Temporary");	// Change from temp Prefab in future.
+		pickUpList = new List<PickUpItem>();
 
 		createPickUps();
 	}
@@ -35,7 +38,7 @@ public class PickUpManager : MonoBehaviour
 				currPickUpItem.renderer.material.color = Color.cyan;
 				
 				PickUpItem currItem = new PickUpItem(currPickUpItem, t, pickUpsLeft);
-				
+				pickUpList.Add(currItem);
 				pickUpsLeft++;
 			}
 		}
