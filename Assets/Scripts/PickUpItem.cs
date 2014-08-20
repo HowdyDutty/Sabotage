@@ -19,7 +19,7 @@ public class PickUpItem
 		generateOptions();
 	}
 
-	// Proceedurly generates the two possible items this can become at runtime.
+	// Proceedurly generates the two possible items this can become when picked up at runtime.
 	private void generateOptions()
 	{
 

@@ -10,7 +10,6 @@ public class PickUpManager : MonoBehaviour
 	public List<PickUpItem> pickUpList { get; private set; }
 
 	public int numPickUps 	 = 30;
-	
 
 	void Start() 
 	{

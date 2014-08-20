@@ -34,7 +34,7 @@ public class ScoreManager : MonoBehaviour
 	public void updateScore(int update)
 	{
 		playerScores[currPlayer] += update;
-		HUDManagerScript.updateHUD(currPlayer+1, playerScores[currPlayer]);
+		//HUDManagerScript.updateHUD(currPlayer+1, playerScores[currPlayer]);
 		Debug.Log("Player " + currPlayer + " score is " + playerScores[currPlayer]);
 
 		if (playerScores[currPlayer] == scoreToWin)

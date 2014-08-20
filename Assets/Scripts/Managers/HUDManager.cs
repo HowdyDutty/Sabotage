@@ -3,7 +3,7 @@ using System.Collections;
 
 public class HUDManager : MonoBehaviour 
 {
-	public float distance = 0.27f;
+	/*public float distance = 0.27f;
 	
 	public GameObject currentPlayer;
 	public GameObject playerScore;
@@ -44,5 +44,5 @@ public class HUDManager : MonoBehaviour
 	{
 		instantiatedCurrentPlayer.GetComponent<GUIText>().text = "Player: " + playerText;
 		instantiatedPlayerScore.GetComponent<GUIText>().text   = "Score: "  + scoreText;
-	}
+	}*/
 }
