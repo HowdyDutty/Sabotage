@@ -114,6 +114,7 @@ public class GameBoardPlayer : MonoBehaviour
 		}
 		if (other.tag.Equals("PickUp") && (playerManagerScript.getInventory().Count < inventorySlots))
 		{
+			Debug.Log("Picked up an item!!");
 			GameObject otherGameObject = other.gameObject;
 			otherGameObject.SetActive(false);
 			playerManagerScript.getInventory().Add(otherGameObject);

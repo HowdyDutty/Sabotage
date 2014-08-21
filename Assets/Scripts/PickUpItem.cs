@@ -15,19 +15,5 @@ public class PickUpItem
 		this.occupiedTile = tile;
 		this.position = tile.position;
 		this.tileNumber = tileNumber;
-
-		generateOptions();
-	}
-
-	// Proceedurly generates the two possible items this can become when picked up at runtime.
-	private void generateOptions()
-	{
-
-	}
-
-	// Applys this Pick Up items' effect onto the player holding it.
-	public void applyEffect()
-	{
-
 	}
 }
