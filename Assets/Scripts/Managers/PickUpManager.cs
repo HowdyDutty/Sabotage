@@ -20,7 +20,7 @@ public class PickUpManager : MonoBehaviour
 		createPickUps();
 	}
 
-	private void createPickUps()
+	public void createPickUps()
 	{
 		int pickUpsLeft = 1;
 		foreach (Tile t in boardManagerScript.tiles)
