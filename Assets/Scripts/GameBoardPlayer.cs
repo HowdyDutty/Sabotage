@@ -14,6 +14,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Sabotage.Enums;
 
 public class GameBoardPlayer : MonoBehaviour
 {
@@ -22,10 +23,7 @@ public class GameBoardPlayer : MonoBehaviour
 	public float rotationSpeed  = 10f;
 	public int movesPerTurn     = 300;
 	public int movesRemaining   = 300;
-	public int inventorySlots   = 5;
 	public int pointsPerMove	= 20;
-
-	private int gameboardPlayer = 0;
 
 	private MouseMovement mouseMovementScript;
 	private BoardManager boardManagerScript;
@@ -63,7 +61,7 @@ public class GameBoardPlayer : MonoBehaviour
 	void Update()
 	{
 		// If this player is currently on the board and it's their turn.
-		if (playerManagerScript.activePlayer == gameboardPlayer)	
+		if (playerManagerScript.activePlayer == (int)PlayerType.GAMEBOARD)	
 		{
 			// Switch turns because the player has taken too many steps.
 			if (movesRemaining == 0)
@@ -97,7 +95,7 @@ public class GameBoardPlayer : MonoBehaviour
 	{
 		if (other.name.Equals("Finish Tile"))
 		{
-			playerManagerScript.changePlayer();
+			playerManagerScript.changeRound();
 			scoreManagerScript.updateScore(0);
 		}
 		if (other.tag.Equals("Tile"))
@@ -112,12 +110,24 @@ public class GameBoardPlayer : MonoBehaviour
 				}
 			}
 		}
-		if (other.tag.Equals("PickUp") && (playerManagerScript.getInventory().Count < inventorySlots))
+		if (other.tag.Equals("PickUp"))
 		{
-			Debug.Log("Picked up an item!!");
-			GameObject otherGameObject = other.gameObject;
-			otherGameObject.SetActive(false);
-			playerManagerScript.getInventory().Add(otherGameObject);
+			// Add condition for if the player chose the Gameboard Plater Item or God Player Action.
+
+			if (playerManagerScript.getGameBoardInventory().Count < playerManagerScript.maxGameBoardItems)
+			{
+				Debug.Log("Picked up an item!!");
+				GameObject otherGameObject = other.gameObject;
+				otherGameObject.SetActive(false);
+				playerManagerScript.getGameBoardInventory().Add(other);
+			}
+			/*if (playerManagerScript.getGodInventory().Count < playerManagerScript.maxGodItems)
+			{
+				Debug.Log("Picked up an item!!");
+				GameObject otherGameObject = other.gameObject;
+				otherGameObject.SetActive(false);
+				playerManagerScript.getGodInventory().Add(other);
+			}*/
 		}
 	}
 
@@ -212,7 +222,7 @@ public class GameBoardPlayer : MonoBehaviour
 			{
 				return (int)rotation.RIGHT;
 			}
-			if (tileLocation.y > myPosition.y)
+			else if (tileLocation.y > myPosition.y)
 			{
 				return (int)rotation.UPPER_RIGHT;
 			}
@@ -227,7 +237,7 @@ public class GameBoardPlayer : MonoBehaviour
 			{
 				return (int)rotation.LEFT;
 			}
-			if (tileLocation.y > myPosition.y)
+			else if (tileLocation.y > myPosition.y)
 			{
 				return (int)rotation.UPPER_LEFT;
 			}

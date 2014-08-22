@@ -19,7 +19,7 @@ public class ScoreManager : MonoBehaviour
 		HUDManagerScript    = FindObjectOfType<HUDManager>();
 	}
 
-	public void changePlayer()
+	public void changeRound()
 	{
 		if (currPlayer == 0)
 		{

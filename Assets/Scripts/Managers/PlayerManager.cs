@@ -2,6 +2,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Sabotage.Enums;
+
 
 public class PlayerManager : MonoBehaviour 
 {
@@ -10,24 +12,18 @@ public class PlayerManager : MonoBehaviour
 	public GameObject startTileGameObject;
 	public GameObject playerGameObject;
 
-	private ArrayList playerOneInventory = new ArrayList();
-	private ArrayList playerTwoInventory = new ArrayList();
+	// Inventorys
+	private ArrayList playerOneGameBoardInventory;
+	private ArrayList playerOneGodInventory;
+	private ArrayList playerTwoGameBoardInventory;
+	private ArrayList playerTwoGodInventory;
+
+	public int maxGameBoardItems {get; private set;}
+	public int maxGodItems {get; private set;}
 
 	public int currGameBoardPlayer { get; private set; }
 	public int activePlayer		   { get; private set; }
 	
-	enum Player : int 
-	{ 
-		ONE = 0, 
-		TWO = 1
-	};
-
-	public enum PlayerType : int
-	{
-		GAMEBOARD = 0,
-		GOD 	  = 1
-	};
-
 	void Start()
 	{
 		currGameBoardPlayer = (int)Player.ONE;				// Player One starts off the game.
@@ -51,51 +47,39 @@ public class PlayerManager : MonoBehaviour
 		playerGameObject.AddComponent<MouseMovement>();
 		playerGameObject.GetComponent<BoxCollider>().isTrigger = true;
 		playerGameObject.AddComponent<Rigidbody>().useGravity = false;
+	
+		playerOneGameBoardInventory = new ArrayList();
+		playerOneGodInventory		= new ArrayList();
+		playerTwoGameBoardInventory = new ArrayList();
+		playerTwoGodInventory		= new ArrayList();
+
+		maxGameBoardItems = 5;
+		maxGodItems = 10;
 	}
 
-	// Get the correct inventory system for whichever player is 
-	// currently on the board.
-	public ArrayList getInventory()
+	public ArrayList getGameBoardInventory()
 	{
-		if (currGameBoardPlayer == (int)Player.ONE)
-		{
-			return playerOneInventory;
-		}
-		else
-		{
-			return playerTwoInventory;
-		}
+		return (currGameBoardPlayer == (int)Player.ONE) ? playerOneGameBoardInventory : playerTwoGameBoardInventory;
 	}
 
-	// This is when the GameBoard Player either dies or makes it
-	// to the end of the grid and the roles are reversed.
-	public void changePlayer()
+	public ArrayList getGodInventory()
 	{
-		Debug.Log("Players have changed.");
-		scoreManagerScript.changePlayer();
-
-		if (currGameBoardPlayer == (int)Player.ONE)
-		{
-			currGameBoardPlayer = (int)Player.TWO;
-		}
-		else 
-		{
-			currGameBoardPlayer = (int)Player.ONE;
-		}
+		return (currGameBoardPlayer == (int)Player.ONE) ? playerOneGodInventory : playerTwoGodInventory;
 	}
 
 	// This is when the 'God' Player gets to use abilities.
 	public void changeTurn()
 	{
 		Debug.Log("Turns have changed.");
-		if (activePlayer == (int)PlayerType.GAMEBOARD)
-		{
-			activePlayer = (int)PlayerType.GOD;
-		}
-		else
-		{
-			activePlayer = (int)PlayerType.GAMEBOARD;
-		}
+		activePlayer = (activePlayer == (int)PlayerType.GAMEBOARD) ? (int)PlayerType.GOD : (int)PlayerType.GAMEBOARD;
+	}
+
+	// This is when the GameBoard Player either dies or makes it to the end.
+	public void changeRound()
+	{
+		Debug.Log("Players have changed.");
+		scoreManagerScript.changeRound();
+		currGameBoardPlayer = (currGameBoardPlayer == (int)Player.ONE) ? (int)Player.TWO : (int)Player.ONE;
 	}
 
 	public void stopPlayers()
