@@ -1,6 +1,7 @@
 ﻿
 using UnityEngine;
 using System.Collections;
+using Sabotage.Enums;
 
 public class PickUpItem 
 {
@@ -10,12 +11,6 @@ public class PickUpItem
 	public int tileNumber {get; private set;}
 	public int typeOfPickUp {get; private set;}
 
-	public enum PickUpType : int
-	{
-		GAMEBOARD_ITEM  = 0,
-		GOD_ACTION		= 1	
-	};
-
 	public PickUpItem(GameObject itemGameObject, Tile tile, int tileNumber)
 	{
 		this.itemGameObject = itemGameObject;
@@ -24,4 +19,8 @@ public class PickUpItem
 		this.tileNumber = tileNumber;
 	}
 
+	public void setTypeOfPickUp(int type)
+	{
+		typeOfPickUp = type;
+	}
 }

@@ -35,16 +35,6 @@ public class GameBoardPlayer : MonoBehaviour
 	private bool headingToTile = false;
 	private Tile occupiedTile;
 
-	enum rotation : int
-	{
-			RIGHT 		= 0,
-			LEFT  		= 180,
-			LOWER_LEFT  = 240,
-			LOWER_RIGHT = 300,
-			UPPER_LEFT  = 120,
-			UPPER_RIGHT = 60
-	};
-
 	void Start()
 	{
 		mouseMovementScript = this.GetComponent<MouseMovement>();

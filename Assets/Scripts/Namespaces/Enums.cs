@@ -3,14 +3,25 @@ namespace Sabotage
 {
 	namespace Enums
 	{
-		// Pick Up Items
+		/////////////////// Gameboard Manager ////////////////////////////  
+		enum rotation : int
+		{
+			RIGHT 		= 0,
+			LEFT  		= 180,
+			LOWER_LEFT  = 240,
+			LOWER_RIGHT = 300,
+			UPPER_LEFT  = 120,
+			UPPER_RIGHT = 60
+		};
+
+		/////////////////// Pick Up Items ////////////////////////////
 		public enum PickUpType : int
 		{
 			GAMEBOARD_ITEM  = 0,
 			GOD_ACTION		= 1	
 		};
 
-		// Player Manager
+		/////////////////// Player Manager ////////////////////////////
 		enum Player : int 
 		{ 
 			ONE = 0, 
@@ -22,7 +33,6 @@ namespace Sabotage
 			GAMEBOARD = 0,
 			GOD 	  = 1
 		};
-	
 	
 	}
 }
