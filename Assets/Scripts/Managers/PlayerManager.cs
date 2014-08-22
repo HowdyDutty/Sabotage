@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Sabotage.Enums;
 
-
 public class PlayerManager : MonoBehaviour 
 {
 	public StartTile startTileScript;
@@ -26,8 +25,8 @@ public class PlayerManager : MonoBehaviour
 	
 	void Start()
 	{
-		currGameBoardPlayer = (int)Player.ONE;				// Player One starts off the game.
-		activePlayer 	    = (int)PlayerType.GAMEBOARD;	// The GameBoard Player starts playing first.
+		currGameBoardPlayer = (int)Sabotage.Enums.Player.ONE;				// Player One starts off the game.
+		activePlayer 	    = (int)Sabotage.Enums.PlayerType.GAMEBOARD;	// The GameBoard Player starts playing first.
 		scoreManagerScript  = FindObjectOfType<ScoreManager>();
 
 		startTileGameObject = GameObject.Find("Start Tile");
